@@ -1,0 +1,14 @@
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://ckypmhn4be4sn"]
+
+[ext_resource type="Texture2D" uid="uid://eb8yrhl3r3k4" path="res://RandomLevelGenTileset.png" id="1_y2fwh"]
+[ext_resource type="Texture2D" uid="uid://06hmi6dnaelb" path="res://GFX/Tilesets/tilesheet_complete.png" id="2_au75k"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qru3w"]
+texture = ExtResource("1_y2fwh")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kj2lp"]
+texture = ExtResource("2_au75k")
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_qru3w")
+sources/1 = SubResource("TileSetAtlasSource_kj2lp")

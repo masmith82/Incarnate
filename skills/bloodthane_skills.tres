@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Bloodthane_Skills" load_steps=2 format=3 uid="uid://fovae0v8qtmk"]
+
+[ext_resource type="Script" path="res://skills/bloodthane_skills.gd" id="1_unrn0"]
+
+[resource]
+script = ExtResource("1_unrn0")
+metadata/_editor_prop_ptr_node = null

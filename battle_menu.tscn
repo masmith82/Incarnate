@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2mn1kb1srvhn"]
+
+[ext_resource type="Script" path="res://battle_menu.gd" id="1_oqcro"]
+
+[node name="battle_menu" type="Control" groups=["menu"]]
+layout_mode = 3
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -1280.0
+offset_top = -400.0
+offset_right = -1280.0
+offset_bottom = -400.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_oqcro")
+metadata/_edit_horizontal_guides_ = []
+
+[node name="menu_cont" type="VBoxContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(350, 200)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_right = 350.0
+offset_bottom = 280.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="health_val" type="Label" parent="menu_cont"]
+layout_mode = 2
+text = "Actions:"
+
+[node name="actions_val" type="Label" parent="menu_cont"]
+layout_mode = 2
+text = "Health:"
+
+[node name="unit_menu" type="ItemList" parent="menu_cont"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+item_count = 4
+item_0/text = "Move"
+item_1/text = "Action"
+item_2/text = "Bloody Rush"
+item_3/text = "End Turn"
+
+[node name="action_menu" type="ItemList" parent="menu_cont"]
+visible = false
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+allow_reselect = true
+item_count = 2
+item_0/text = "Blade Fury"
+item_1/text = "Bloody Rush"
+
+[node name="Button" type="Button" parent="menu_cont"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="item_clicked" from="menu_cont/unit_menu" to="." method="_on_action_menu_item_clicked"]
+[connection signal="pressed" from="menu_cont/Button" to="." method="_on_button_pressed"]

@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://dhmvj62o1sfva"]
+
+[ext_resource type="Script" path="res://actor2.gd" id="1_ickdq"]
+[ext_resource type="Texture2D" uid="uid://c1jwjrojc7c3d" path="res://icon.svg" id="2_a22f8"]
+[ext_resource type="Script" path="res://skills/bloodthane_skills.gd" id="2_brmkf"]
+[ext_resource type="PackedScene" uid="uid://b2mn1kb1srvhn" path="res://battle_menu.tscn" id="3_ayf5b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kr0ct"]
+size = Vector2(63, 63)
+
+[node name="actor" type="Node2D" groups=["bloodthane", "player_units", "units"]]
+script = ExtResource("1_ickdq")
+skills = ExtResource("2_brmkf")
+
+[node name="actor_core" type="Node2D" parent="."]
+
+[node name="sprite_ph" type="Sprite2D" parent="actor_core"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_a22f8")
+
+[node name="actor_area" type="Area2D" parent="actor_core"]
+z_index = 1
+
+[node name="actor_collider" type="CollisionShape2D" parent="actor_core/actor_area"]
+shape = SubResource("RectangleShape2D_kr0ct")
+
+[node name="battle_menu" parent="." instance=ExtResource("3_ayf5b")]
+top_level = true
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 850.0
+offset_top = 450.0
+offset_right = 850.0
+offset_bottom = 450.0
+grow_horizontal = 1
+grow_vertical = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="skill_lib" type="Node" parent="."]
+
+[node name="class_skills" type="Node" parent="."]

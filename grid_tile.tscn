@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://cx5i35k8e5jlr"]
+
+[ext_resource type="Script" path="res://grid_tile.gd" id="1_t6fvx"]
+[ext_resource type="Texture2D" uid="uid://h1g76wkw2hd6" path="res://GFX/UI/grid.png" id="1_ydymj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t7kkk"]
+size = Vector2(63, 63)
+
+[node name="grid_tile" type="Area2D" groups=["tiles"]]
+script = ExtResource("1_t6fvx")
+
+[node name="grid_outline" type="Sprite2D" parent="."]
+texture = ExtResource("1_ydymj")
+
+[node name="grid_body" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_t7kkk")
+
+[node name="coords" type="Label" parent="."]
+offset_left = -25.0
+offset_top = 10.0
+offset_right = 25.0
+offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
