@@ -2,15 +2,25 @@ extends Node
 
 @onready var g = get_node("/root/Global")
 @onready var target_pool = g.level.find_child("player_units").get_children()
+@onready var buffs = $buff_list
+
 enum {MOVE, SHIFT}
 enum {ANY, NO_SKILL, NO_MOVE}
 
-@export var health = 12
+@export var buff_list = Node
+@export var skills = Resource
+
+@export var max_health = 9
 @export var movement = 4
+
+
+var health = max_health
+
 
 var movetype = MOVE
 
 signal end_turn_signal
+signal dealt_damage
 
 ###################
 # STATE VARIABLES #
@@ -24,13 +34,13 @@ var moving = false
 var queued_action
 
 func _ready():
+	await get_tree().create_timer(.1).timeout
 	get_unit_pos()
 	
 func _process(delta):
 	pass
 
 func set_enemy_actor():
-	print("Setting actor")
 	g.selection = g.ENEMY_TURN
 	queued_action = null
 	get_unit_pos()
@@ -52,11 +62,7 @@ func path_to_target(target):
 	path.resize(movement)
 	path = path.filter(func(coords): return coords != target.astar_pos)
 	path = path.filter(func(coords): return coords != Vector2i(0,0))
-	print(path)
 	await move(path)
-
-func prune_path(coords):
-		return coords != target.astar_pos
 			
 func move(path):
 	print(target.astar_pos, path)
@@ -88,15 +94,38 @@ func basic_melee():
 		var tween = create_tween()
 		tween.tween_property(self, "position", target.origin_tile.position, .1)
 		tween.tween_property(self, "position", origin_tile.position, .1)
-		target.take_damage(5)
+		target.take_damage(self, 5)
 		print("attack!")
 	g.reset_nav()
 	await end_turn()
 
-func take_damage(damage):
+func face_target(target):
+		pass
+
+func take_damage(source : Node2D, damage : int):
 	health = health - damage
 	if health <= 0:
 		queue_free()
+	source.i_dealt_damage(self, damage)
+	combat_text(damage)
+		
+func combat_text(damage):
+	var tween = create_tween()
+	$local_text/combat_text.text = (str(damage))
+	tween.tween_property($local_text/combat_text, "position", $local_text/combat_text.position + Vector2(50,-50), 1)
+	await tween.finished
+	$local_text/combat_text.text = ""
 
-func face_target(target):
-		pass
+func i_dealt_damage(target: Node2D, damage : int):
+	emit_signal("dealt_damage", damage, target)
+
+func heal_damage(source : Node2D, healing : int):
+	if health + healing > max_health:
+		health = max_health
+		var overheal = healing - (max_health - health)		# overhealing will probably do something at some point
+		
+func add_buff(buffname):
+	$buff_list.add_child(buffname)
+
+func remove_buff(buffname):
+	$buff_list.remove_child(buffname)

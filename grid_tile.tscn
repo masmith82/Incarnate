@@ -1,7 +1,30 @@
-[gd_scene load_steps=4 format=3 uid="uid://cx5i35k8e5jlr"]
+[gd_scene load_steps=8 format=3 uid="uid://cx5i35k8e5jlr"]
 
 [ext_resource type="Script" path="res://grid_tile.gd" id="1_t6fvx"]
 [ext_resource type="Texture2D" uid="uid://h1g76wkw2hd6" path="res://GFX/UI/grid.png" id="1_ydymj"]
+[ext_resource type="Texture2D" uid="uid://cnalky6u87apy" path="res://GFX/UI/GridCyan.png" id="3_sf772"]
+[ext_resource type="Texture2D" uid="uid://b0uei8o1e25s2" path="res://GFX/UI/GridRed.png" id="4_bmvuc"]
+[ext_resource type="Texture2D" uid="uid://bon6fh2liltdy" path="res://GFX/UI/GridGreen.png" id="5_ixk2k"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c6cqs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ydymj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_sf772")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_bmvuc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ixk2k")
+}],
+"loop": true,
+"name": &"default",
+"speed": 0.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t7kkk"]
 size = Vector2(63, 63)
@@ -9,8 +32,8 @@ size = Vector2(63, 63)
 [node name="grid_tile" type="Area2D" groups=["tiles"]]
 script = ExtResource("1_t6fvx")
 
-[node name="grid_outline" type="Sprite2D" parent="."]
-texture = ExtResource("1_ydymj")
+[node name="grid_outline" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_c6cqs")
 
 [node name="grid_body" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_t7kkk")

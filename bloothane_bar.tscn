@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://cf8rg7lvso0vu"]
+
+[ext_resource type="Script" path="res://bloodthane_ui.gd" id="1_mf7n3"]
+[ext_resource type="Texture2D" uid="uid://b0uei8o1e25s2" path="res://GFX/UI/GridRed.png" id="2_cif6h"]
+[ext_resource type="Texture2D" uid="uid://cqcb7yxk6pxil" path="res://GFX/Characters/Bloodthane/Icons/walking-boot.png" id="3_hixp6"]
+[ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Characters/Bloodthane/Icons/1 Blade FurySmall.png" id="4_nbdjn"]
+
+[node name="ui_bar" type="Control"]
+custom_minimum_size = Vector2(800, 80)
+layout_mode = 3
+anchors_preset = 0
+offset_top = 198.0
+offset_right = 800.0
+offset_bottom = 278.0
+grow_horizontal = 2
+script = ExtResource("1_mf7n3")
+
+[node name="ui_bar_background" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(800, 80)
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 80.0
+texture = ExtResource("2_cif6h")
+
+[node name="ui_icon_container" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(16, 16)
+theme_override_constants/separation = 16
+
+[node name="basic_move_button" type="TextureButton" parent="ui_icon_container"]
+layout_mode = 2
+texture_normal = ExtResource("3_hixp6")
+
+[node name="basic_atk_button2" type="TextureButton" parent="ui_icon_container"]
+layout_mode = 2
+texture_normal = ExtResource("4_nbdjn")
+
+[connection signal="pressed" from="ui_icon_container/basic_move_button" to="." method="_on_basic_move_button_pressed"]

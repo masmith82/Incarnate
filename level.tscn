@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://o4lefd4ixu06"]
+[gd_scene load_steps=9 format=3 uid="uid://bek2e8iql87yy"]
 
 [ext_resource type="Texture2D" uid="uid://ibe10rob2eog" path="res://GFX/Tilesets/tilesheet_complete.png" id="1_4ltib"]
 [ext_resource type="Script" path="res://level_map.gd" id="2_gf2dy"]
 [ext_resource type="Script" path="res://enemy_controller.gd" id="3_5hvvk"]
 [ext_resource type="PackedScene" uid="uid://cxjlf4dvf5wm6" path="res://enemy_actor.tscn" id="5_0d166"]
-[ext_resource type="PackedScene" uid="uid://dhmvj62o1sfva" path="res://actor2.tscn" id="6_lhelj"]
+[ext_resource type="Script" path="res://map_camera.gd" id="6_h63dk"]
+[ext_resource type="PackedScene" uid="uid://btsfq0tdt0owd" path="res://actor.tscn" id="6_lhelj"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xrsnc"]
 texture = ExtResource("1_4ltib")
@@ -623,6 +624,7 @@ sources/2 = SubResource("TileSetAtlasSource_xrsnc")
 
 [node name="level" type="Node2D" groups=["map"]]
 script = ExtResource("2_gf2dy")
+metadata/_edit_vertical_guides_ = []
 
 [node name="level_map" type="TileMap" parent="."]
 position = Vector2(32, 32)
@@ -640,20 +642,28 @@ layer_1/tile_data = PackedInt32Array(196612, 1310722, 6, 131080, 1310722, 6, 393
 
 [node name="map_grid_tiles" type="Node2D" parent="."]
 
-[node name="astar_handler" type="Node" parent="."]
-
 [node name="enemy_controller" type="Node" parent="."]
 script = ExtResource("3_5hvvk")
 
 [node name="enemy_actor" parent="enemy_controller" instance=ExtResource("5_0d166")]
+position = Vector2(512, 448)
+max_health = 14
 
-[node name="debug" type="Label" parent="."]
-offset_left = 854.0
-offset_top = 17.0
-offset_right = 998.0
-offset_bottom = 281.0
+[node name="enemy_actor2" parent="enemy_controller" instance=ExtResource("5_0d166")]
+position = Vector2(448, 384)
 
 [node name="player_units" type="Node" parent="."]
 
-[node name="actor2" parent="player_units" instance=ExtResource("6_lhelj")]
-position = Vector2(512, 448)
+[node name="actor" parent="player_units" instance=ExtResource("6_lhelj")]
+position = Vector2(384, 448)
+
+[node name="map_camera" type="Camera2D" parent="."]
+position = Vector2(448, 384)
+zoom = Vector2(1.2, 1.2)
+script = ExtResource("6_h63dk")
+
+[node name="debug" type="Label" parent="map_camera"]
+offset_left = 320.0
+offset_top = -320.0
+offset_right = 464.0
+offset_bottom = -56.0

@@ -4,4 +4,18 @@
 
 [resource]
 script = ExtResource("1_unrn0")
-metadata/_editor_prop_ptr_node = null
+atk_1_name = "Blade Fury"
+atk_1_cd = 2
+area_1_name = "Bloody Rush"
+area_1_cd = 3
+def_1_name = "Acute Coagulant"
+def_1_cd = 3
+move_1_name = "Verve Magnet"
+move_1_cd = 3
+util_1_name = "Adrenal Surge"
+util_1_cd = 3
+bt_atk_1 = {
+"cd": 2,
+"icon": "res://GFX/Characters/Bloodthane/Icons/1 Blade FurySmall.png",
+"name": "Blade Fury"
+}

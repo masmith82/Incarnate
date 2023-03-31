@@ -42,8 +42,11 @@ func reset_nav():
 # points to use the skill
 ############################
 
-func action_check(unit, targeting):
+func action_check(unit, name, targeting):
 	if unit.actions == unit.NO_SKILL or unit.actions == unit.SPENT:
+		return false
+	if unit.cooldowns[name] > 0:
+		print("On cooldown!")
 		return false
 	else:
 		set_targ_state(targeting)
@@ -82,7 +85,10 @@ func pathfind_shift(origin : Area2D, distance : int):
 				neighbor.set_highlight()
 				neighbor.valid_selection = true
 				pathfind_basic(neighbor, (distance - neighbor.move_cost))
-				
+
+func manual_path_shift(unit : Node2D, origin: Area2D = unit.origin_tile):
+	pathfind_shift(origin, 1)
+
 func target_basic(origin : Area2D, distance : int):
 	if distance == 0:
 		return
@@ -91,35 +97,105 @@ func target_basic(origin : Area2D, distance : int):
 		neighbor.valid_selection = true
 		if distance > 0:
 			target_basic(neighbor, (distance - 1))
+			
+func target_self(origin: Area2D):
+	origin.valid_selection = true
+	origin.set_highlight()
 
 ############################
 # BASIC ACTIONS:
 # Basic logic for different types of movement such as regular move, shift, fly, etc.
 ############################
 
-func basic_move(unit : Node2D, origin : Area2D, movement : int):
+func basic_move(unit : Node2D, origin : Area2D, movement : int, path : Array = [], is_move : bool = true):
 	g = Engine.get_singleton("Global")
-	pathfind_basic(origin, movement)
-	unit.sk.c = 0
-
-	while unit.sk.c == 0:
-		await g.get_tree().create_timer(.1).timeout
-	if unit.sk.c < 0: return
-
-	# this gets messy, calls astar through global/level node, gets path from origin tile's astar
-	# to target's astar (stored in g.current_actor)
-	var path = g.level.astar.get_id_path(origin.astar_index, unit.sk.target.astar_index)
+	if path.size() <= 0:
+		pathfind_basic(origin, movement)
+		var target = await g.level.send_target
+		if !target: return
+		path = g.level.astar.get_id_path(origin.astar_index, target.astar_index)
 	var waypoint
 	var tween = g.create_tween()
 	for point in path:
 		waypoint = g.level.astar_to_tile[point].position
 		tween.tween_property(unit, "position", waypoint, .1)
 	await tween.finished
-	unit.finish_action("move")
+	if is_move:								# flag if this is a move action, defaults to yes
+		unit.finish_action("move")
+	path.clear()
+	return
+	
+func basic_shift(unit : Node2D, origin : Area2D, movement : int, path : Array = [], is_move : bool = false):
+	g = Engine.get_singleton("Global")
+	if path.size() <= 0:					# if a path is passed in (as in Bloody Rush) use that instead
+		pathfind_basic(origin, movement)	# otherwise gets path from astar
+		var target = await g.level.send_target
+		if !target: return
+		path = g.level.astar.get_id_path(origin.astar_index, target.astar_index)
+	var waypoint
+	var tween = g.create_tween()
+	for point in path:
+		waypoint = g.level.astar_to_tile[point].position
+		tween.tween_property(unit, "position", waypoint, .1)
+	await tween.finished
+	if is_move:							# flag if this is replacing a default move
+		unit.finish_action("move")		# otherwise assumes it's attached to a skill
+	path.clear()
+	return
 
-func manual_path_shift(unit : Node2D, origin: Area2D = unit.origin_tile):
-	g.level.pathfind_shift(origin, 1)
+func basic_pull(unit: Node2D, origin: Area2D, movement : int, path : Array = []):
+	g = Engine.get_singleton("Global")
+	# why is this happening on moves involving CPU but not player?
+	# astar pathfinding has weird issues with obstacles when moving enemies...
+	# ok I know why, player is prevented from moving onto enemy tile
+	# !!! needs various tweaks to fine tune
+	g.level.astar.set_point_solid(origin.astar_index, false)
+	path = g.level.astar.get_id_path(unit.origin_tile.astar_index, origin.astar_index)
+	g.level.astar.set_point_solid(origin.astar_index, true)
+	path = prune_ai_path(origin, movement, path)
+	await basic_move(unit, origin, movement, path, false)				# call a regular move, flagged
+	await g.get_tree().create_timer(.1).timeout
+	unit.get_unit_pos()													# confirm targets new position
 
+func prune_ai_path(origin : Area2D, movement : int, path : Array):
+	path.remove_at(0)		# removes the origin tile
+	path.resize(movement)
+	path = path.filter(func(coords): return coords != origin.astar_index)	# can't pull onto self
+	path = path.filter(func(coords): return coords != Vector2i(0,0))		# remove invalid entries so we don't crash
+	return path
+
+#============================#
+# BASIC BUFF/DEBUFF HANDLING #
+#============================#
+
+class buff extends Node:
+	var duration
+	var unit
+	var stacks
+	var callable = Callable(self, "buff_stuff")
+	
+	func _ready():
+		unit = get_parent().get_parent()
+		var g = Engine.get_singleton("Global")
+		g.start_turn.connect(callable)
+
+	func buff_tick():
+		if duration:
+			duration -= 1
+			print(name, ": ", duration, "turns remaining.")
+			if duration <= 0:
+				self.queue_free()
+	
+	func buff_stuff():
+		pass
+
+#======================#
+# SKILLS AS CLASS TEST #
+#======================#
+
+class skill:
+	var type
+	var c = 0
 """
 
 

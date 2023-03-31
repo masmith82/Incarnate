@@ -1,25 +1,71 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxjlf4dvf5wm6"]
+[gd_scene load_steps=8 format=3 uid="uid://cxjlf4dvf5wm6"]
 
 [ext_resource type="Script" path="res://enemy_actor.gd" id="1_soiw3"]
-[ext_resource type="Texture2D" uid="uid://c1jwjrojc7c3d" path="res://icon.svg" id="2_wsrvl"]
+[ext_resource type="Texture2D" uid="uid://dlvbgr5ksaq15" path="res://GFX/Enemies/$MonsterA.png" id="2_lsgdi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xk8xy"]
+atlas = ExtResource("2_lsgdi")
+region = Rect2(0, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lg53k"]
+atlas = ExtResource("2_lsgdi")
+region = Rect2(48, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vugyf"]
+atlas = ExtResource("2_lsgdi")
+region = Rect2(96, 0, 48, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ya6mi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xk8xy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lg53k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vugyf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lg53k")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.5
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ub5am"]
 size = Vector2(63, 63)
 
-[node name="enemy_actor" type="Node2D"]
+[node name="enemy_actor" type="Node2D" node_paths=PackedStringArray("buff_list") groups=["enemy_units"]]
 position = Vector2(512, 512)
 script = ExtResource("1_soiw3")
-health = 8
+buff_list = NodePath("buff_list")
 
 [node name="actor_core" type="Node2D" parent="."]
 
-[node name="sprite_ph" type="Sprite2D" parent="actor_core"]
+[node name="sprite_ph" type="AnimatedSprite2D" parent="actor_core"]
 modulate = Color(1, 0.278431, 0.301961, 0.87451)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_wsrvl")
+sprite_frames = SubResource("SpriteFrames_ya6mi")
+autoplay = "default"
 
 [node name="actor_area" type="Area2D" parent="actor_core"]
 z_index = 1
 
 [node name="actor_collider" type="CollisionShape2D" parent="actor_core/actor_area"]
 shape = SubResource("RectangleShape2D_ub5am")
+
+[node name="buff_list" type="Node" parent="."]
+
+[node name="local_text" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="combat_text" type="Label" parent="local_text"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
