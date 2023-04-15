@@ -1,0 +1,315 @@
+[gd_scene load_steps=22 format=3 uid="uid://b28tqu5uijark"]
+
+[ext_resource type="Script" path="res://UI/ui_bar.gd" id="1_d7xfl"]
+[ext_resource type="Texture2D" uid="uid://c282mbqup610p" path="res://GFX/Generic Icons/empty-hourglass.png" id="2_qnyns"]
+[ext_resource type="Texture2D" uid="uid://b0uei8o1e25s2" path="res://GFX/UI/GridRed.png" id="3_cx75i"]
+[ext_resource type="Texture2D" uid="uid://b16h052ctiqtu" path="res://GFX/UI/healthbar.png" id="4_isvhs"]
+[ext_resource type="Script" path="res://UI/health_bar.gd" id="5_0pnue"]
+[ext_resource type="Texture2D" uid="uid://dap11kfo8yrd1" path="res://GFX/UI/skillpane.png" id="6_ivsui"]
+[ext_resource type="Script" path="res://UI/action_point_ui.gd" id="7_yaaho"]
+[ext_resource type="Texture2D" uid="uid://2hf28wjhst64" path="res://GFX/UI/walking-boot.png" id="8_7b2ew"]
+[ext_resource type="Texture2D" uid="uid://dstp87capw16l" path="res://GFX/UI/usable.png" id="9_p4cup"]
+[ext_resource type="Texture2D" uid="uid://b5gmd3no15xc6" path="res://GFX/UI/back-forth.png" id="10_qlmg2"]
+[ext_resource type="Texture2D" uid="uid://cqcb7yxk6pxil" path="res://GFX/Units/Bloodthane/Icons/walking-boot.png" id="11_m34ku"]
+[ext_resource type="Script" path="res://UI/action_button.gd" id="12_e8hpg"]
+[ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Units/Bloodthane/Icons/1 Blade FurySmall.png" id="13_hh0ok"]
+[ext_resource type="Texture2D" uid="uid://ch6jvwkj8of33" path="res://GFX/Units/Bloodthane/Icons/5 Reaving Claws.png" id="14_dc4rg"]
+[ext_resource type="Texture2D" uid="uid://bngik8pnaxtrl" path="res://GFX/Units/Bloodthane/Icons/3BloodyRush.png" id="15_jmxd4"]
+[ext_resource type="Texture2D" uid="uid://mrd55nd55g2e" path="res://GFX/Units/Bloodthane/Icons/3AcuteCoagulant.png" id="16_r0tra"]
+[ext_resource type="Texture2D" uid="uid://glfiso8m0xes" path="res://GFX/Units/Bloodthane/Icons/4VerveMagnet.png" id="17_trq4n"]
+[ext_resource type="Texture2D" uid="uid://ctk8kdeqakxiw" path="res://GFX/Units/Bloodthane/Icons/5AdrenalineSurge.png" id="18_3gf1h"]
+[ext_resource type="Texture2D" uid="uid://bs3wxrbsh8hxo" path="res://GFX/Units/Bloodthane/Icons/3 Bloodlust.png" id="19_iiwcu"]
+[ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://GFX/Generic Icons/cancel.png" id="20_37ts6"]
+[ext_resource type="Texture2D" uid="uid://c0ushr3eipvym" path="res://GFX/UI/hotbarcenter.png" id="21_2yphg"]
+
+[node name="ui_bar" type="Control" groups=["menu"]]
+visible = false
+custom_minimum_size = Vector2(1050, 80)
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -525.0
+offset_top = 240.0
+offset_right = 525.0
+offset_bottom = 320.0
+grow_horizontal = 2
+script = ExtResource("1_d7xfl")
+
+[node name="desc_panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = -0.2625
+anchor_bottom = -0.2625
+offset_top = -128.0
+offset_right = 256.0
+offset_bottom = -8.0
+metadata/_edit_use_anchors_ = true
+
+[node name="desc_label" type="Label" parent="desc_panel"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 248.0
+offset_bottom = 112.0
+autowrap_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="end_turn_button" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 976.0
+offset_top = -72.0
+offset_right = 1104.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+texture_normal = ExtResource("2_qnyns")
+
+[node name="ui_bar_background" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(800, 80)
+layout_mode = 0
+offset_right = 1050.0
+offset_bottom = 80.0
+texture = ExtResource("3_cx75i")
+
+[node name="ui_icon_container" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 2060.0
+offset_bottom = 128.0
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(16, 16)
+theme_override_constants/separation = 128
+
+[node name="stats_container" type="VBoxContainer" parent="ui_icon_container"]
+layout_mode = 2
+size_flags_stretch_ratio = 5.0
+
+[node name="health_bar" type="TextureProgressBar" parent="ui_icon_container/stats_container"]
+layout_mode = 2
+size_flags_vertical = 3
+max_value = 10.0
+fill_mode = 1
+nine_patch_stretch = true
+stretch_margin_left = 400
+texture_under = ExtResource("4_isvhs")
+script = ExtResource("5_0pnue")
+
+[node name="health_label" type="Label" parent="ui_icon_container/stats_container/health_bar"]
+z_index = 1
+layout_mode = 0
+offset_right = 398.0
+offset_bottom = 67.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="actions_ui" type="TextureRect" parent="ui_icon_container/stats_container"]
+z_index = 2
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_stretch_ratio = 0.0
+texture = ExtResource("6_ivsui")
+script = ExtResource("7_yaaho")
+
+[node name="move_action" type="TextureRect" parent="ui_icon_container/stats_container/actions_ui"]
+z_index = 1
+z_as_relative = false
+layout_mode = 0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 143.0
+offset_bottom = 138.0
+scale = Vector2(0.45, 0.35)
+tooltip_text = "Spend a Move Action to move up to your speed, or play a Maneuver skill."
+texture = ExtResource("8_7b2ew")
+
+[node name="skill_action" type="TextureRect" parent="ui_icon_container/stats_container/actions_ui"]
+z_index = 1
+z_as_relative = false
+layout_mode = 0
+offset_left = 99.0
+offset_top = 10.0
+offset_right = 227.0
+offset_bottom = 138.0
+scale = Vector2(0.45, 0.35)
+tooltip_text = "Spend a Skill Action to use any skill that isn't currently on cooldown."
+texture = ExtResource("9_p4cup")
+
+[node name="flex_action" type="TextureRect" parent="ui_icon_container/stats_container/actions_ui"]
+z_index = 1
+z_as_relative = false
+layout_mode = 0
+offset_left = 181.0
+offset_top = 10.0
+offset_right = 309.0
+offset_bottom = 138.0
+scale = Vector2(0.45, 0.35)
+tooltip_text = "A Flex Action can be used as either a Move Action or a Skill action. Flex Actions are used last by default."
+texture = ExtResource("10_qlmg2")
+
+[node name="action_buttons" type="HBoxContainer" parent="ui_icon_container"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="basic_move_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("11_m34ku")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/basic_move_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="basic_atk_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("13_hh0ok")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/basic_atk_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="heavy_atk_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("14_dc4rg")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/heavy_atk_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="area_atk_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("15_jmxd4")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/area_atk_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="def_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("16_r0tra")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/def_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="maneuver_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("17_trq4n")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/maneuver_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="util_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("18_3gf1h")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/util_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ult_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 6
+texture_normal = ExtResource("19_iiwcu")
+script = ExtResource("12_e8hpg")
+
+[node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/ult_button"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="cancel_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_stretch_ratio = 8.01
+tooltip_text = "Cancel the current action."
+texture_normal = ExtResource("20_37ts6")
+
+[node name="buff_bar" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_top = -29.0
+offset_right = 256.0
+offset_bottom = 3.0
+scale = Vector2(0.75, 0.75)
+tooltip_text = "Text"
+
+[node name="buff_template" type="TextureRect" parent="buff_bar"]
+visible = false
+layout_mode = 2
+texture = ExtResource("21_2yphg")
+
+[connection signal="pressed" from="end_turn_button" to="." method="_on_end_turn_button_pressed"]
+[connection signal="pressed" from="ui_icon_container/action_buttons/basic_move_button" to="." method="_on_basic_move_button_pressed" flags=18]
+[connection signal="pressed" from="ui_icon_container/action_buttons/cancel_button" to="." method="_on_cancel_button_pressed"]

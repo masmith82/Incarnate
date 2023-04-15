@@ -1,0 +1,20 @@
+- consider changing button setup, have all buttons pull their info from skill resources
+- further consider letting each button handle it's own cooldowns/lockout status
+
+- fix various bloody rush targeting issues (can't repeat tiles)
+- finish implementation of shift completion (resolve unit collision)
+
+- consider turning the popui into a proper popup, which will help with exclusivity/lockout issues
+
+- let buff bar have it's own script to handle buffs
+
+- write some comments/docs :(
+
+
+!!!
+- messed around with PLAYER_ACTION AND PLAYER_SELECT states so be careful...
+- need a better way to figure out when the UI is actually changing to pick out when
+	UI is sending commands to wrong unit
+- probably just rebuild the button UI system now yeah?
+- fix logic around action point check and changing target states... for example maneuvers can't
+	really be set to check for move points vs. action points at the moments

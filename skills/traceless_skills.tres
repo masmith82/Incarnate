@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="Traceless_Skills" load_steps=2 format=3 uid="uid://bvix2hyayrtjt"]
+
+[ext_resource type="Script" path="res://skills/traceless_skills.gd" id="1_17k54"]
+
+[resource]
+script = ExtResource("1_17k54")

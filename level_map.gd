@@ -164,13 +164,19 @@ func confirm_units():
 
 func tile_select(tile_id : Node2D):
 	var actor = tile_id.get_unit_on_tile()
-	print("valid: ", tile_id.valid_selection, " --- occupied: ", tile_id.occupied)
+	print("valid: ", tile_id.valid_selection, " - occupied: ", tile_id.occupied, " - obstacle: ", tile_id.obstacle)
 	
 	match g.selection:
 		g.NO_SELECTION:
 			g.reset_nav()
 			if actor and actor.is_in_group("player_units"):
 				actor.set_player_actor()
+		g.PLAYER_SELECT:
+			if actor:	# if there's a unit on the clicked tile...
+				if actor == g.current_actor: return		# if it's our current unit, do nothing
+				elif actor.is_in_group("player_units"): actor.set_player_actor()	# if it's another player unit, switch to that unit
+				elif actor.is_in_group("enemy_units"):
+					g.deselect(g.current_actor) # NYI, will show enemy details
 		g.PLAYER_ACTION:
 			if tile_id.valid_selection:
 				validate_target(tile_id)

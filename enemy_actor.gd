@@ -97,10 +97,9 @@ func basic_melee():
 		target.take_damage(self, 5)
 		print("attack!")
 	g.reset_nav()
-	await end_turn()
 
 func face_target(target):
-		pass
+	pass
 
 func take_damage(source : Node2D, damage : int):
 	health = health - damage
@@ -129,3 +128,14 @@ func add_buff(buffname):
 
 func remove_buff(buffname):
 	$buff_list.remove_child(buffname)
+
+func suppress_collision():
+	print(self.astar_pos, " suppressing collision")
+	get_unit_pos()
+	g.level.astar.set_point_solid(astar_pos, false)
+
+func unsuppress_collision():
+	print(self.astar_pos, " unsuppressing collision")
+	get_unit_pos()
+	g.level.astar.set_point_solid(astar_pos, true)
+

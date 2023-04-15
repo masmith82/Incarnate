@@ -10,10 +10,50 @@
 extends Resource
 class_name Skills_Library
 
-enum {NO_SELECTION, PLAYER_ACTION, NPC_SELECTION, ENEMY_TURN, UPKEEP, LOCKED}
+enum {NO_SELECTION, PLAYER_SELECT, PLAYER_ACTION, NPC_SELECTION, ENEMY_TURN, UPKEEP, LOCKED}
 enum {NO_TARGET, PLAYER_MOVE, PLAYER_ATTACK, PLAYER_HELP, SPECIAL}
+enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
+enum {RECHARGE, RESET}
 
 var g	# placeholder for calling Global singleton
+var popup = load("res://UI/popup_ui.tscn")
+
+############################
+# SKILL TEMPLATE:
+# The basic format of each skill.
+# fx: a packed scene containing VFX and SFX to be instantiated
+# name: the name of the skill as a string
+# icon: the icon for the skill, a texture to preload
+# cd: the cooldown of the skill
+# tt: the skill's tooltip
+# type: the skills type, from the skill type enum
+# All skills use the "execute" method to contain their main logic
+# Steps: 1) establish origin tile. 2) call action_check to see if unit can perform the action and
+#	set targeting type. 3) Initializing targeting method. 4) await target signal from map.
+#	5) when target signal received, get targetted unit(s). 6) instantiate FX. 7) set cooldown.
+#	8) invoke finish_action() for cleanup
+############################
+
+class skill_template extends Skills_Library:
+	
+	@export var fx: PackedScene
+	@export var name: String
+	@export var icon: Texture
+	@export var cd: int
+	@export var tt: String
+	var type = BASIC
+	
+	func execute(unit):
+		var origin = unit.origin_tile
+		if !action_check(unit, name, PLAYER_ATTACK): return
+		target_basic(origin, 1)
+		var target = await g.level.send_target
+		if !target: return
+		var t = target.get_unit_on_tile()
+		if t: pass # do stuff here
+		t.add_child(fx.instantiate())
+		unit.cooldowns[name] = cd
+		await unit.finish_action("skill")
 
 ############################
 # GENERAL HELPERS:
@@ -127,8 +167,9 @@ func basic_move(unit : Node2D, origin : Area2D, movement : int, path : Array = [
 	
 func basic_shift(unit : Node2D, origin : Area2D, movement : int, path : Array = [], is_move : bool = false):
 	g = Engine.get_singleton("Global")
+	g.suppress_collision()
 	if path.size() <= 0:					# if a path is passed in (as in Bloody Rush) use that instead
-		pathfind_basic(origin, movement)	# otherwise gets path from astar
+		pathfind_shift(origin, movement)	# otherwise gets path from astar
 		var target = await g.level.send_target
 		if !target: return
 		path = g.level.astar.get_id_path(origin.astar_index, target.astar_index)
@@ -138,16 +179,25 @@ func basic_shift(unit : Node2D, origin : Area2D, movement : int, path : Array = 
 		waypoint = g.level.astar_to_tile[point].position
 		tween.tween_property(unit, "position", waypoint, .1)
 	await tween.finished
+	await resolve_shift(path.back(), path)
+	g.unsuppress_collision()
 	if is_move:							# flag if this is replacing a default move
 		unit.finish_action("move")		# otherwise assumes it's attached to a skill
 	path.clear()
-	return
+
+func resolve_shift(target : Vector2i, path : Array):
+	# !!! currently the shift logic allows units to shift through but not into other unit's spaces
+	# !!! that may be good enough honestly!
+	var tile = g.level.astar_to_tile[target]
+	if tile.get_overlapping_areas().size() > 1:
+		print("conflict")
+		pass
 
 func basic_pull(unit: Node2D, origin: Area2D, movement : int, path : Array = []):
 	g = Engine.get_singleton("Global")
 	# why is this happening on moves involving CPU but not player?
 	# astar pathfinding has weird issues with obstacles when moving enemies...
-	# ok I know why, player is prevented from moving onto enemy tile
+	# ok I know why, player is prevented from moving onto enemy tile... whoops did I fix this or not? lol
 	# !!! needs various tweaks to fine tune
 	g.level.astar.set_point_solid(origin.astar_index, false)
 	path = g.level.astar.get_id_path(unit.origin_tile.astar_index, origin.astar_index)
@@ -187,63 +237,5 @@ class buff extends Node:
 				self.queue_free()
 	
 	func buff_stuff():
+		# to be overridden by each buff's "stuff"
 		pass
-
-#======================#
-# SKILLS AS CLASS TEST #
-#======================#
-
-class skill:
-	var type
-	var c = 0
-"""
-
-
-func init_shift(movement : int):
-	if !move_check(): return
-	g.get_tree().call_group("tiles", "suppress_collision")
-	unit.get_unit_pos()
-	g.level.pathfind_basic(unit.origin_tile, movement)
-	unit.queued_action = Callable(self, "shift")
-	
-func shift(target_tile : Area2D, target_tiles : Array = []):
-	var path
-	if target_tiles.size() > 0:
-		path = target_tiles
-	else: 
-		path = g.level.astar.get_id_path(unit.origin_tile.astar_index, target_tile.astar_index)
-	var waypoint
-	var tween = create_tween()
-	print("animate? ", path)
-	for point in path:
-		waypoint = g.level.astar_to_tile[point].position
-		tween.tween_property(unit, "position", waypoint, .1)
-	await tween.finished
-	await get_tree().create_timer(.1).timeout
-	unit.get_unit_pos()
-	if unit.origin_tile.occupied == true:
-		resolve_shift()
-	else:
-		unit.finish_action("move")
-
-func resolve_shift():
-	pass
-#	get_tree().call_group("tiles", "unsuppress_collision")	
-
-
-
-
-#func basic_move_target(unit : Node, skill: Callable, movement : int):
-#	await unit.get_unit_pos()
-#	g.level.pathfind_basic(unit.origin_tile, 1)
-#	unit.queued_action = skill
-
-
-
-func manual_path_move(unit : Node, skill: Callable, origin: Object = unit.origin_tile):
-	await unit.get_unit_pos()
-	g.level.pathfind_basic(origin, 1)
-	unit.queued_action = skill
-	
-
-"""

@@ -38,7 +38,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ub5am"]
 size = Vector2(63, 63)
 
-[node name="enemy_actor" type="Node2D" node_paths=PackedStringArray("buff_list") groups=["enemy_units"]]
+[node name="enemy_actor" type="Node2D" node_paths=PackedStringArray("buff_list") groups=["enemy_units", "units"]]
 position = Vector2(512, 512)
 script = ExtResource("1_soiw3")
 buff_list = NodePath("buff_list")

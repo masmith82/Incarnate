@@ -1,84 +1,128 @@
 extends Node2D
 
-var sk = load("res://skills/bloodthane_skills.tres")
+#====================#
+# INSTANCE VARIABLES
+#====================#
 
-@onready var g = get_node("/root/Global")
-@onready var buffs = $buff_list
+# skill info
+@export var skill_data = Resource
+var sk
+var skill_loadout = []
 
+# enums for handling skill types and action points
+enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
 enum {ANY, NO_SKILL, NO_MOVE, SPENT}
 
-@export var max_health = 12
-@export var movement = 4
-@export var skills = Resource
+# basic stat variables
+@export var max_health : int = 0
+@export var movement : int = 0
+var health
 
-var health = max_health
-
+var cooldowns = {}
 const default_action_pool = {
 	"move" : 1,
 	"skill": 1,
 	"flex": 1
 }
+# !!! should look into why this doesn't work without the read only bit in _ready
+var action_pool = default_action_pool.duplicate() 
 
-var ui_bar
-var group_name = "bt_ui"
-var cooldowns = {}
+# pointers and misc setup
+@onready var g = get_node("/root/Global")
+@onready var buffs = $buff_list
 
-# currently skills are stored in this array and we use these indexes in other places
-# 0 = basic attack, 1 = heavy attack, 2 = area attack, and so on
+var ui_bar					# when the unit's UI builds itself, it attaches here
+var group_name : String		# stores each individual unit's group name, which is used to refer to that unit's UI elements
 
-var skill_loadout = [sk.bt_basic_1,
-					sk.bt_heavy_1,
-					sk.bt_area_1,
-					sk.bt_def_1,
-					sk.bt_man_1,
-					sk.bt_util_1,
-					sk.bt_ult_1
-					]
-					
-var action_pool = default_action_pool.duplicate()
 
-signal dealt_damage
-signal took_damage
-signal healed_damage
-signal special_popup_confirm
+#=========#
+# SIGNALS #
+#=========#
+signal dealt_damage		# tells the game controller and other units that this unit dealt damage
+signal took_damage		# tells the game controller and other units that this unit took damage
+signal healed_damage	# tells the game controller and other units that this unit healed damage
+signal special_popup_confirm	# confirms a special popup action has been finished
 
-###################
-# STATE VARIABLES #
-###################
+#=================#
+# STATE VARIABLES
+# These frequently updated variables that inform where the unit is on the map
+# and what actions it can take
+#=================#
 
 var actions = ANY
 var astar_pos = Vector2i(0,0)
 var origin_tile = Area2D
 
-func _process(delta):
+#=====================#
+# UNIT INITIALIZATION #
+#=====================#
+
+#=================#
+# FUNCTION: setup_unit
+# Called from a unit's _ready()
+# Sets up the unit's action pool, initializes cooldowns through init_cooldowns,
+# calls create_ui from the camera to create a UI bar for this unit,
+# connects the unit to the turn controller for upkeep
+#=================#
+
+func setup_unit():
+	default_action_pool.make_read_only()
+	init_cooldowns()
+	g.camera.create_ui(self)
+	g.start_turn.connect(Callable(self, "start_turn_upkeep"))
+	init_passive()
+
+#=================#
+# FUNCTION: init_passive
+# Placeholder for units to set up their passives if needed
+# Called by _ready()
+#=================#
+
+func init_passive():
 	pass
 
-func _ready():
-	default_action_pool.make_read_only()
-	link_skills()
-	init_cooldowns()
-	g.start_turn.connect(Callable(self, "start_turn_upkeep"))
-	await add_buff(sk.bt_passive.new())
-
-func link_skills():
-	sk.unit = self
-
+#=================#
+# FUNCTION: init_cooldowns
+# Sets up a dictionary to hold the unit's skill cooldowns, with the skill's name as key
+# Called by _ready()
+# !!! may be changing this to skill types or something
+#=================#
 func init_cooldowns():
 	for skill in skill_loadout:
-		var n = skill["name"]
-		cooldowns[n] = 0
+		print(skill)
+		if skill != null:
+			var n = skill.name
+			cooldowns[n] = 0
 
-func link_ui(ui):
-	ui_bar = ui
+#=================#
+# FUNCTION: set_player_actor
+# In forms the game controller singleton that this unit is the current actor,
+# gets it's position and changes the selection state and displays the unit's UI
+# !!! this could probably just be handled from global?
+#=================#
 
 func set_player_actor():
+	if g.current_actor:
+		g.deselect(g.current_actor)		# if we have an actor selected, deselect it
 	get_unit_pos()
-	g.set_select_state(g.PLAYER_ACTION)
+	g.set_select_state(g.PLAYER_SELECT)
 	g.current_actor = self
+	ui_bar.update_ui()
 	ui_bar.show()
-	
+
+#=================#
+# FUNCTION: hide_menu
+# Hide's the unit's UI bar
+#=================#
+
 func hide_menu():
 	ui_bar.hide()
+
+#=================#
+# FUNCTION: action_handler
+# Sets the unit's action point availability based on which actions have been spent
+# Usually called by finish_action
+#=================#
 
 func action_handler():
 	actions = ANY
@@ -89,6 +133,13 @@ func action_handler():
 	if action_pool["skill"] < 1 and action_pool["flex"] < 1 and action_pool["move"] < 1:
 		actions = SPENT
 
+#=================#
+# FUNCTION: finish_action
+# Post action cleanup step, called when an action is finished
+# Decrements the appropriate action point, calls the action_handler to change state as needed
+# Calls global post_action_cleanup
+#=================#
+
 func finish_action(act_type):
 	if action_pool[act_type] > 0:
 		action_pool[act_type] -= 1
@@ -97,36 +148,64 @@ func finish_action(act_type):
 	action_handler()
 	await get_tree().create_timer(.1).timeout
 	g.post_action_cleanup(self)
-	
+
+#=================#
+# FUNCTION: start_turn_upkeep
+# Handles start-of-turn upkeep, namely decrementing cooldowns and resetting action points
+#=================#
+
 func start_turn_upkeep():
+	for k in action_pool:
+		action_pool[k] = default_action_pool[k]
 	for cd in cooldowns:
 		if cooldowns[cd] > 0: cooldowns[cd] -= 1
 		ui_bar.unlock_actions()
 		ui_bar.update_ui()
+		
+#=================#
+# FUNCTION: end_turn
+# Clears any targetting data, confirms the unit's position and state, informs game controller than
+# player turn has ended
+# !!! this could probably move to global too
+#=================#
 
 func end_turn():
-	for k in action_pool:
-		action_pool[k] = default_action_pool[k]
-	await get_tree().create_timer(.1).timeout
 	g.reset_nav()
 	get_unit_pos()
 	action_handler()
 	g.selection = g.NO_SELECTION
 	g.end_player_turn()
-	
+
+#=================#
+# FUNCTION: get_unit_pos
+# Get's the units current tile and astar_position.
+# Also sets the unit's tile as occupied for pathfinding purposes
+#=================#
+
 func get_unit_pos():
 	if $actor_core/actor_area.get_overlapping_areas():
 		var a = $actor_core/actor_area.get_overlapping_areas()
 		astar_pos = a[0].astar_index
 		origin_tile = a[0]
 		origin_tile.occupied = true		# this might be a problem with shifting?
-		
+
+#=================#
+# FUNCTION: take_damage
+# Decrements health when attacked, sends a signal to the damaging actor that damage was successful,
+# calls combat_text and updates the health bar
+#=================#
+
 func take_damage(source : Node2D, damage : int):
 	health = health - damage
 	source.i_dealt_damage(self, damage)
 	combat_text(damage)
 	get_tree().call_group(group_name, "update_health_bar")
-	
+
+#=================#
+# FUNCTION: heal_damage
+# Increments health when healed, stores overhealing info
+# !!! NYI fully
+#=================#
 func heal_damage(source : Node2D, healing : int):
 	if health + healing > max_health:
 		health = max_health
@@ -138,9 +217,19 @@ func heal_damage(source : Node2D, healing : int):
 # when a unit takes damage, it calls this method to confirm with it's attacker if the attack was successful
 # and thus trigger on hits and that sort of thing
 
+#=================#
+# FUNCTION: i_dealt_damage
+# Tells listeners that this unit successfully dealt damage
+# !!! For now this connects to the Bloodthane's passive, will need expansion/tweaking
+#=================#
 
 func i_dealt_damage(target: Node2D, damage : int):
 	emit_signal("dealt_damage", target, damage)
+
+#=================#
+# FUNCTION: combat_text
+# Displays floating combat text when damage is dealt
+#=================#
 
 func combat_text(damage):
 	var tween = create_tween()
@@ -150,21 +239,30 @@ func combat_text(damage):
 	$local_text/combat_text.text = ""
 	$local_text/combat_text.position = Vector2(0,0)
 
-
-
-
-
-
-
-# had some problems on initializing, so we wait here to make sure the buff_list node is loaded before
-# we add the initial passive buffs
-# actually just kidding it's still not working :(
-# probably just make it a subscript of buff_list I guess
+#=================#
+# FUNCTION: add_buff
+# Adds a new buff to this unit's buff_list node and updates the buff bar
+#=================#
 
 func add_buff(buffname):
 	$buff_list.add_child(buffname)
 	ui_bar.update_buff_bar()
-	
+
+#=================#
+# FUNCTION: remove_buff
+# Removes a buff from this unit's buff_list node and updates the buff bar
+#=================#
+
 func remove_buff(buffname):
 	$buff_list.remove_child(buffname)
 	ui_bar.update_buff_bar()
+
+func suppress_collision():
+	await get_tree().create_timer(.1).timeout
+	get_unit_pos()
+	g.level.astar.set_point_solid(astar_pos, false)
+
+func unsuppress_collision():
+	await get_tree().create_timer(.1).timeout
+	get_unit_pos()
+	g.level.astar.set_point_solid(astar_pos, true)

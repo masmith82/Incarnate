@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="Displacer_Strike" load_steps=2 format=3 uid="uid://bfwudpsqbf0va"]
+
+[ext_resource type="Script" path="res://skills/Traceless/displacer_strike.gd" id="1_by6et"]
+
+[resource]
+script = ExtResource("1_by6et")

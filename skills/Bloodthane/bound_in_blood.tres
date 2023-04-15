@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="Bound_In_Blood" load_steps=2 format=3 uid="uid://chqtqic7k1thq"]
+
+[ext_resource type="Script" path="res://skills/Bloodthane/bound_in_blood.gd" id="1_lorcv"]
+
+[resource]
+script = ExtResource("1_lorcv")

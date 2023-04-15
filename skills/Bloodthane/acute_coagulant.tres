@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Acute_Coagulant" load_steps=2 format=3 uid="uid://c847noq6gjwwn"]
+
+[ext_resource type="Script" path="res://skills/Bloodthane/acute_coagulant.gd" id="1_5r00m"]
+
+[resource]
+script = ExtResource("1_5r00m")
+name = "Acute Coagulant"
+cd = 3
+tt = "Heal yourself for 4 damage. At the beginning of the next two turns, heal for 4 damage."

@@ -10,6 +10,7 @@ extends Node
 #============#
 
 @onready var level = get_node("/root/level")
+@onready var camera = get_node("/root/level/map_camera")
 @onready var enemy = level.find_child("enemy_controller")
 
 #======================#
@@ -18,11 +19,28 @@ extends Node
 # an ability/movement queued, and so on.
 #======================#
 
-enum {NO_SELECTION, PLAYER_ACTION, NPC_SELECTION, ENEMY_TURN, UPKEEP, POPUP_LOCKED}
+enum {NO_SELECTION, PLAYER_SELECT, PLAYER_ACTION, NPC_SELECTION, ENEMY_TURN, UPKEEP, POPUP_LOCKED}
 enum {NO_TARGET, PLAYER_MOVE, PLAYER_ATTACK, PLAYER_HELP, SPECIAL}
 
 @onready var selection = NO_SELECTION
 @onready var targeting = NO_TARGET
+
+#======================#
+# KEY GROUPS AND SIGNALS
+# GROUPS:
+#	control - calls to this singleton
+#	map - calls to the level_map
+#	xx_ui - calls to a specific unit's ui_bar (xx = bt for bloodthane, tl for traceless, etc.)
+#	tiles - calls to all map tiles
+#	units - calls to all units
+#	player_units - calls to all player units
+#	bloodthane - calls to a specific unit... !!! not used?
+#
+# SIGNALS:
+#	start_turn
+#	end_turn
+#
+#======================#
 
 #====================#
 # INSTANCE VARIABLES #
@@ -62,9 +80,6 @@ func get_select_state() -> int:
 func get_target_state() -> int:
 	return targeting
 
-func _process(delta):
-	pass
-
 #===============#
 # TURN HANDLING #
 #===============#
@@ -99,12 +114,16 @@ func reset_nav():
 #######################
 
 func post_action_cleanup(unit):
-	unit.get_unit_pos()
-	get_tree().call_group(unit.group_name, "unlock_check")
-	get_tree().call_group(unit.group_name, "update_actions_ui")
-	set_select_state(PLAYER_ACTION)
+	set_select_state(PLAYER_SELECT)
 	set_target_state(NO_TARGET)
+	level.emit_signal("send_target", null)	# feels like this shouldn't work? added null here?
+
+	unit.get_unit_pos()
 	reset_nav()
+
+	get_tree().call_group(unit.group_name, "set_button_state")
+	get_tree().call_group(unit.group_name, "update_actions_ui")
+
 
 #######################
 # FUNCTION: deselect
@@ -114,15 +133,16 @@ func post_action_cleanup(unit):
 func deselect(unit):
 	reset_nav()
 	if unit:
-		unit.ui_bar.unlock_actions()
+		unit.ui_bar.hide()
 	current_actor = null
 	get_tree().call_group("menu", "hide_ui")
 	selection = NO_SELECTION
 	targeting = NO_TARGET
 
 func suppress_collision():
-	get_tree().call_group("tiles", "suppress_collision")
+	get_tree().call_group("units", "suppress_collision")
 	
 func unsuppress_collision():
-	for tile in collision_tiles:
-		tile.unsuppress_collision()
+	get_tree().call_group("units", "unsuppress_collision")
+#	for tile in collision_tiles:
+#		tile.unsuppress_collision()

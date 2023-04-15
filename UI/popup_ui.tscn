@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3hdocn7yu0mh"]
+
+[ext_resource type="Script" path="res://UI/popup_ui.gd" id="1_vious"]
+[ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://GFX/Generic Icons/cancel.png" id="2_fy10f"]
+
+[node name="popup_ui" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 184.0
+offset_top = -288.0
+offset_right = 248.0
+offset_bottom = -224.0
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_vious")
+
+[node name="popup_container" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="popup_base_button" type="TextureButton" parent="popup_container"]
+layout_mode = 2
+texture_normal = ExtResource("2_fy10f")
+
+[connection signal="pressed" from="popup_container/popup_base_button" to="." method="_on_popup_base_button_pressed"]

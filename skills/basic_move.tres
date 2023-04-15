@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="Basic_Move" load_steps=2 format=3 uid="uid://byq0e2iatuxhn"]
+
+[ext_resource type="Script" path="res://skills/basic_move.gd" id="1_akvrx"]
+
+[resource]
+script = ExtResource("1_akvrx")

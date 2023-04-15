@@ -7,6 +7,10 @@
 
 extends Area2D
 
+#====================#
+# INSTANCE VARIABLES
+#====================#
+
 @onready var g = get_node("/root/Global")		# quick reference to Global singleton
 @export var move_cost = 1						# move cost multiplier for rough terrain
 
@@ -87,11 +91,9 @@ func set_highlight():
 #######################
 
 func suppress_collision():
-	print("Suppression called")
 	if occupied == true and obstacle == false:
 		g.level.astar.set_point_solid(astar_index, false)
 		g.collision_tiles.append(self)
-		print(astar_index, "suppressed")
 
 #######################
 # FUNCTION: unsuppress_collision
@@ -99,9 +101,8 @@ func suppress_collision():
 #######################
 	
 func unsuppress_collision():
-	print("Unsuppression called")
 	if get_unit_on_tile():
-		print(occupied, astar_index, "unsuppressed")
+		get_tree().call_group("units", "unsuppress_tile")
 		g.level.astar.set_point_solid(self.astar_index, true)
 		occupied = true
 		print(astar_index, " ", occupied)

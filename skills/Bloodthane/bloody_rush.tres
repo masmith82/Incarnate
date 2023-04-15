@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Bloody_Rush" load_steps=3 format=3]
+
+[ext_resource type="Texture2D" uid="uid://bngik8pnaxtrl" path="res://GFX/Units/Bloodthane/Icons/3BloodyRush.png" id="1_8o1vs"]
+[ext_resource type="Script" path="res://skills/Bloodthane/bloody_rush.gd" id="2_jfwgr"]
+
+[resource]
+script = ExtResource("2_jfwgr")
+name = "Bloody Rush"
+icon = ExtResource("1_8o1vs")
+cd = 3
+tt = "Shift 3 squares, then deal 2 damage to each enemy in a square you passed through or passed adjacent to."

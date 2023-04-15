@@ -1,60 +1,34 @@
-[gd_scene load_steps=31 format=3 uid="uid://btsfq0tdt0owd"]
+[gd_scene load_steps=8 format=3 uid="uid://j8sax34ndffw"]
 
 [ext_resource type="Script" path="res://actor.gd" id="1_u4scy"]
-[ext_resource type="Script" path="res://skills/bloodthane_skills.gd" id="2_brmkf"]
-[ext_resource type="Texture2D" uid="uid://b7pfmp58jqo7l" path="res://GFX/Characters/$Bloodthanesprite.png" id="3_ivgw7"]
-[ext_resource type="Texture2D" uid="uid://cqcb7yxk6pxil" path="res://GFX/Characters/Bloodthane/Icons/walking-boot.png" id="5_1lh81"]
-[ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Characters/Bloodthane/Icons/1 Blade FurySmall.png" id="6_1yjkn"]
-[ext_resource type="Script" path="res://bloodthane_ui.gd" id="6_jxmpb"]
-[ext_resource type="Texture2D" uid="uid://c282mbqup610p" path="res://GFX/Generic Icons/empty-hourglass.png" id="6_wygt2"]
-[ext_resource type="Texture2D" uid="uid://b16h052ctiqtu" path="res://GFX/UI/healthbar.png" id="7_c4rd0"]
-[ext_resource type="Texture2D" uid="uid://dap11kfo8yrd1" path="res://GFX/UI/skillpane.png" id="8_7susm"]
-[ext_resource type="Script" path="res://subscripts/health_bar.gd" id="8_p5k06"]
-[ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://GFX/Generic Icons/cancel.png" id="9_71jdf"]
-[ext_resource type="Texture2D" uid="uid://ch6jvwkj8of33" path="res://GFX/Characters/Bloodthane/Icons/5 Reaving Claws.png" id="9_1120x"]
-[ext_resource type="Script" path="res://subscripts/actions_ui.gd" id="9_mtvav"]
-[ext_resource type="Texture2D" uid="uid://2hf28wjhst64" path="res://GFX/UI/walking-boot.png" id="9_sb40l"]
-[ext_resource type="Texture2D" uid="uid://dstp87capw16l" path="res://GFX/UI/usable.png" id="10_bkrt3"]
-[ext_resource type="Texture2D" uid="uid://bngik8pnaxtrl" path="res://GFX/Characters/Bloodthane/Icons/3BloodyRush.png" id="10_nnr7b"]
-[ext_resource type="Texture2D" uid="uid://mrd55nd55g2e" path="res://GFX/Characters/Bloodthane/Icons/3AcuteCoagulant.png" id="11_db5ok"]
-[ext_resource type="Texture2D" uid="uid://b5gmd3no15xc6" path="res://GFX/UI/back-forth.png" id="11_dwe0j"]
-[ext_resource type="Texture2D" uid="uid://glfiso8m0xes" path="res://GFX/Characters/Bloodthane/Icons/4VerveMagnet.png" id="12_p2bo6"]
-[ext_resource type="Script" path="res://subscripts/action_button.gd" id="13_5i1nl"]
-[ext_resource type="Texture2D" uid="uid://b0uei8o1e25s2" path="res://GFX/UI/GridRed.png" id="13_anqvl"]
-[ext_resource type="Texture2D" uid="uid://ctk8kdeqakxiw" path="res://GFX/Characters/Bloodthane/Icons/5AdrenalineSurge.png" id="13_pk24i"]
-[ext_resource type="Texture2D" uid="uid://bs3wxrbsh8hxo" path="res://GFX/Characters/Bloodthane/Icons/3 Bloodlust.png" id="14_ixtj6"]
-[ext_resource type="Texture2D" uid="uid://c0ushr3eipvym" path="res://GFX/UI/hotbarcenter.png" id="24_kr6ou"]
+[ext_resource type="Texture2D" uid="uid://ktox0tq85wt7" path="res://GFX/Units/Bloodthane/bt_spritesheet_scaled.png" id="2_fg2nb"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xh8sj"]
-atlas = ExtResource("3_ivgw7")
-region = Rect2(0, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_rmpcr"]
+atlas = ExtResource("2_fg2nb")
+region = Rect2(525, 0, 350, 350)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_862dh"]
-atlas = ExtResource("3_ivgw7")
-region = Rect2(32, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_qlo3a"]
+atlas = ExtResource("2_fg2nb")
+region = Rect2(175, 0, 350, 350)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pitc1"]
-atlas = ExtResource("3_ivgw7")
-region = Rect2(64, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_q4hvn"]
-atlas = ExtResource("3_ivgw7")
-region = Rect2(32, 0, 32, 32)
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7eho"]
+atlas = ExtResource("2_fg2nb")
+region = Rect2(875, 0, 350, 350)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5uc26"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_xh8sj")
+"texture": SubResource("AtlasTexture_rmpcr")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_862dh")
+"texture": SubResource("AtlasTexture_qlo3a")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pitc1")
+"texture": SubResource("AtlasTexture_rmpcr")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_q4hvn")
+"texture": SubResource("AtlasTexture_u7eho")
 }],
 "loop": true,
 "name": &"default",
@@ -64,15 +38,14 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kr0ct"]
 size = Vector2(63, 63)
 
-[node name="actor" type="Node2D" groups=["bloodthane", "player_units", "units"]]
+[node name="actor" type="Node2D" groups=["player_units", "units"]]
 position = Vector2(0, -3)
 script = ExtResource("1_u4scy")
-skills = ExtResource("2_brmkf")
 
 [node name="actor_core" type="Node2D" parent="."]
 
 [node name="sprite_ph" type="AnimatedSprite2D" parent="actor_core"]
-scale = Vector2(1.76, 1.75)
+scale = Vector2(0.2, 0.199)
 sprite_frames = SubResource("SpriteFrames_5uc26")
 autoplay = "default"
 frame_progress = 0.414084
@@ -96,299 +69,3 @@ mouse_filter = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
-
-[node name="ui_bar" type="Control" parent="." groups=["menu"]]
-custom_minimum_size = Vector2(1050, 80)
-layout_mode = 3
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_right = 1050.0
-offset_bottom = 80.0
-grow_horizontal = 2
-script = ExtResource("6_jxmpb")
-
-[node name="desc_panel" type="Panel" parent="ui_bar"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = -0.2625
-anchor_bottom = -0.2625
-offset_top = -128.0
-offset_right = 256.0
-offset_bottom = -8.0
-metadata/_edit_use_anchors_ = true
-
-[node name="desc_label" type="Label" parent="ui_bar/desc_panel"]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 248.0
-offset_bottom = 112.0
-autowrap_mode = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="end_turn_button" type="TextureButton" parent="ui_bar"]
-layout_mode = 0
-offset_left = 976.0
-offset_top = -72.0
-offset_right = 1104.0
-offset_bottom = 56.0
-scale = Vector2(0.5, 0.5)
-texture_normal = ExtResource("6_wygt2")
-
-[node name="ui_bar_background" type="TextureRect" parent="ui_bar"]
-custom_minimum_size = Vector2(800, 80)
-layout_mode = 0
-offset_right = 1050.0
-offset_bottom = 80.0
-texture = ExtResource("13_anqvl")
-
-[node name="ui_icon_container" type="HBoxContainer" parent="ui_bar"]
-layout_mode = 0
-offset_right = 2060.0
-offset_bottom = 128.0
-scale = Vector2(0.5, 0.5)
-pivot_offset = Vector2(16, 16)
-theme_override_constants/separation = 128
-
-[node name="stats_container" type="VBoxContainer" parent="ui_bar/ui_icon_container"]
-layout_mode = 2
-size_flags_stretch_ratio = 5.0
-
-[node name="health_bar" type="TextureProgressBar" parent="ui_bar/ui_icon_container/stats_container"]
-layout_mode = 2
-size_flags_vertical = 3
-max_value = 10.0
-fill_mode = 1
-nine_patch_stretch = true
-stretch_margin_left = 400
-texture_under = ExtResource("7_c4rd0")
-script = ExtResource("8_p5k06")
-
-[node name="health_label" type="Label" parent="ui_bar/ui_icon_container/stats_container/health_bar"]
-z_index = 1
-layout_mode = 0
-offset_right = 398.0
-offset_bottom = 67.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 48
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="actions_ui" type="TextureRect" parent="ui_bar/ui_icon_container/stats_container"]
-z_index = 2
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_stretch_ratio = 0.0
-texture = ExtResource("8_7susm")
-script = ExtResource("9_mtvav")
-
-[node name="move_action" type="TextureRect" parent="ui_bar/ui_icon_container/stats_container/actions_ui"]
-z_index = 1
-z_as_relative = false
-layout_mode = 0
-offset_left = 15.0
-offset_top = 10.0
-offset_right = 143.0
-offset_bottom = 138.0
-scale = Vector2(0.45, 0.35)
-tooltip_text = "Spend a Move Action to move up to your speed, or play a Maneuver skill."
-texture = ExtResource("9_sb40l")
-
-[node name="skill_action" type="TextureRect" parent="ui_bar/ui_icon_container/stats_container/actions_ui"]
-z_index = 1
-z_as_relative = false
-layout_mode = 0
-offset_left = 99.0
-offset_top = 10.0
-offset_right = 227.0
-offset_bottom = 138.0
-scale = Vector2(0.45, 0.35)
-tooltip_text = "Spend a Skill Action to use any skill that isn't currently on cooldown."
-texture = ExtResource("10_bkrt3")
-
-[node name="flex_action" type="TextureRect" parent="ui_bar/ui_icon_container/stats_container/actions_ui"]
-z_index = 1
-z_as_relative = false
-layout_mode = 0
-offset_left = 181.0
-offset_top = 10.0
-offset_right = 309.0
-offset_bottom = 138.0
-scale = Vector2(0.45, 0.35)
-tooltip_text = "A Flex Action can be used as either a Move Action or a Skill action. Flex Actions are used last by default."
-texture = ExtResource("11_dwe0j")
-
-[node name="action_buttons" type="HBoxContainer" parent="ui_bar/ui_icon_container"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="basic_move_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("5_1lh81")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/basic_move_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="basic_atk_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("6_1yjkn")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/basic_atk_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="heavy_atk_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("9_1120x")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/heavy_atk_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="area_atk_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("10_nnr7b")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/area_atk_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="def_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("11_db5ok")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/def_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="maneuver_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("12_p2bo6")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/maneuver_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="util_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("13_pk24i")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/util_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ult_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 6
-texture_normal = ExtResource("14_ixtj6")
-script = ExtResource("13_5i1nl")
-
-[node name="cd_label" type="Label" parent="ui_bar/ui_icon_container/action_buttons/ult_button"]
-layout_mode = 0
-offset_right = 128.0
-offset_bottom = 128.0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 64
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="cancel_button" type="TextureButton" parent="ui_bar/ui_icon_container/action_buttons"]
-layout_mode = 2
-size_flags_horizontal = 10
-size_flags_stretch_ratio = 8.01
-tooltip_text = "Cancel the current action."
-texture_normal = ExtResource("9_71jdf")
-
-[node name="buff_bar" type="HBoxContainer" parent="ui_bar"]
-layout_mode = 0
-offset_top = -29.0
-offset_right = 256.0
-offset_bottom = 3.0
-scale = Vector2(0.75, 0.75)
-tooltip_text = "Text"
-
-[node name="buff_template" type="TextureRect" parent="ui_bar/buff_bar"]
-visible = false
-layout_mode = 2
-texture = ExtResource("24_kr6ou")
-
-[connection signal="pressed" from="ui_bar/end_turn_button" to="ui_bar" method="_on_end_turn_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/basic_move_button" to="ui_bar" method="_on_basic_move_button_pressed" flags=18]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/basic_atk_button" to="ui_bar" method="_on_basic_atk_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/heavy_atk_button" to="ui_bar" method="_on_heavy_atk_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/area_atk_button" to="ui_bar" method="_on_area_atk_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/def_button" to="ui_bar" method="_on_def_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/maneuver_button" to="ui_bar" method="_on_maneuver_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/util_button" to="ui_bar" method="_on_util_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/ult_button" to="ui_bar" method="_on_ult_button_pressed"]
-[connection signal="pressed" from="ui_bar/ui_icon_container/action_buttons/cancel_button" to="ui_bar" method="_on_cancel_button_pressed"]
