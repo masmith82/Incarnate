@@ -94,16 +94,21 @@ func basic_melee():
 		var tween = create_tween()
 		tween.tween_property(self, "position", target.origin_tile.position, .1)
 		tween.tween_property(self, "position", origin_tile.position, .1)
-		target.take_damage(self, 5)
+		self.deal_damage(target, 5)
 		print("attack!")
 	g.reset_nav()
 
 func face_target(target):
 	pass
 
+func deal_damage(target : Node2D, damage : int):
+	# insert conditionals here
+	target.take_damage(self, damage)
+
 func take_damage(source : Node2D, damage : int):
 	health = health - damage
 	if health <= 0:
+		origin_tile.occupied = false
 		queue_free()
 	source.i_dealt_damage(self, damage)
 	combat_text(damage)
@@ -130,12 +135,10 @@ func remove_buff(buffname):
 	$buff_list.remove_child(buffname)
 
 func suppress_collision():
-	print(self.astar_pos, " suppressing collision")
 	get_unit_pos()
 	g.level.astar.set_point_solid(astar_pos, false)
 
 func unsuppress_collision():
-	print(self.astar_pos, " unsuppressing collision")
 	get_unit_pos()
 	g.level.astar.set_point_solid(astar_pos, true)
 

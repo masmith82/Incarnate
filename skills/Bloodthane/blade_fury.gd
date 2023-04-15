@@ -7,6 +7,7 @@ class_name Blade_Fury
 @export var icon: Texture = preload("res://GFX/Units/Bloodthane/Icons/1 Blade FurySmall.png")
 @export var cd: int = 0
 @export var tt: String = "Attack a target in melee range for 4 damage."
+@export var base_damage = 4
 var type = BASIC
 
 func execute(unit):
@@ -16,7 +17,7 @@ func execute(unit):
 	var target = await g.level.send_target
 	if !target: return
 	var t = target.get_unit_on_tile()
-	if t: t.take_damage(unit, 4)
+	if t: unit.deal_damage(t, base_damage)
 	t.add_child(fx.instantiate())
 	unit.cooldowns[name] = cd
 	unit.finish_action("skill")

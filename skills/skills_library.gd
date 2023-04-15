@@ -82,7 +82,13 @@ func reset_nav():
 # points to use the skill
 ############################
 
+# !!! going to probably need to rewrite this, it's causing a lot of hiccups
+
 func action_check(unit, name, targeting):
+	if unit is Traceless_Shadow:
+		set_targ_state(targeting)
+		set_select_state(PLAYER_ACTION)
+		return true
 	if unit.actions == unit.NO_SKILL or unit.actions == unit.SPENT:
 		return false
 	if unit.cooldowns[name] > 0:
@@ -177,6 +183,7 @@ func basic_shift(unit : Node2D, origin : Area2D, movement : int, path : Array = 
 	var tween = g.create_tween()
 	for point in path:
 		waypoint = g.level.astar_to_tile[point].position
+		tween.set_trans(Tween.TRANS_BACK)
 		tween.tween_property(unit, "position", waypoint, .1)
 	await tween.finished
 	await resolve_shift(path.back(), path)
@@ -184,6 +191,7 @@ func basic_shift(unit : Node2D, origin : Area2D, movement : int, path : Array = 
 	if is_move:							# flag if this is replacing a default move
 		unit.finish_action("move")		# otherwise assumes it's attached to a skill
 	path.clear()
+	unit.emit_signal("shifted", origin)
 
 func resolve_shift(target : Vector2i, path : Array):
 	# !!! currently the shift logic allows units to shift through but not into other unit's spaces
@@ -239,3 +247,16 @@ class buff extends Node:
 	func buff_stuff():
 		# to be overridden by each buff's "stuff"
 		pass
+
+#============================#
+# UNIVERSAL BUFFS/DEBUFFS	 #
+#============================#
+
+class debuff_blind extends buff:
+	
+	func _init():
+		name = "Blind"
+	
+	func _ready():
+		unit = get_parent().get_parent()
+		print(unit.name, " was blinded!")

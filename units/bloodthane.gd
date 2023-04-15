@@ -11,5 +11,4 @@ func _ready():
 	setup_unit()
 
 func init_passive():
-	pass
-	#add_buff(sk[PASS].bt_passive.new())
+	add_buff(sk[PASS].bt_passive.new())

@@ -13,7 +13,7 @@ var skill_loadout = []
 enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
 enum {ANY, NO_SKILL, NO_MOVE, SPENT}
 
-# basic stat variables
+# basic info variables
 @export var max_health : int = 0
 @export var movement : int = 0
 var health
@@ -29,7 +29,7 @@ var action_pool = default_action_pool.duplicate()
 
 # pointers and misc setup
 @onready var g = get_node("/root/Global")
-@onready var buffs = $buff_list
+var buffs
 
 var ui_bar					# when the unit's UI builds itself, it attaches here
 var group_name : String		# stores each individual unit's group name, which is used to refer to that unit's UI elements
@@ -41,8 +41,10 @@ var group_name : String		# stores each individual unit's group name, which is us
 signal dealt_damage		# tells the game controller and other units that this unit dealt damage
 signal took_damage		# tells the game controller and other units that this unit took damage
 signal healed_damage	# tells the game controller and other units that this unit healed damage
+signal shifted
+signal moved
 signal special_popup_confirm	# confirms a special popup action has been finished
-
+signal queued_action_finished
 #=================#
 # STATE VARIABLES
 # These frequently updated variables that inform where the unit is on the map
@@ -66,6 +68,7 @@ var origin_tile = Area2D
 #=================#
 
 func setup_unit():
+	buffs = $buff_list
 	default_action_pool.make_read_only()
 	init_cooldowns()
 	g.camera.create_ui(self)
@@ -89,7 +92,6 @@ func init_passive():
 #=================#
 func init_cooldowns():
 	for skill in skill_loadout:
-		print(skill)
 		if skill != null:
 			var n = skill.name
 			cooldowns[n] = 0
@@ -141,6 +143,9 @@ func action_handler():
 #=================#
 
 func finish_action(act_type):
+	if act_type == "free":
+		g.post_action_cleanup(self)
+		return
 	if action_pool[act_type] > 0:
 		action_pool[act_type] -= 1
 	else:
@@ -152,15 +157,18 @@ func finish_action(act_type):
 #=================#
 # FUNCTION: start_turn_upkeep
 # Handles start-of-turn upkeep, namely decrementing cooldowns and resetting action points
+# Refreshes all action_pool values to their defaults, then calls update_actions_ui to update UI
 #=================#
 
 func start_turn_upkeep():
+	print(name, " turn start upkeep")
 	for k in action_pool:
 		action_pool[k] = default_action_pool[k]
+		print(action_pool)
 	for cd in cooldowns:
 		if cooldowns[cd] > 0: cooldowns[cd] -= 1
-		ui_bar.unlock_actions()
-		ui_bar.update_ui()
+		get_tree().call_group(group_name, "set_button_state")
+	get_tree().call_group(group_name, "update_actions_ui")
 		
 #=================#
 # FUNCTION: end_turn
@@ -188,6 +196,10 @@ func get_unit_pos():
 		astar_pos = a[0].astar_index
 		origin_tile = a[0]
 		origin_tile.occupied = true		# this might be a problem with shifting?
+
+func deal_damage(target : Node2D, damage : int):
+	# insert conditionals here
+	target.take_damage(self, damage)
 
 #=================#
 # FUNCTION: take_damage

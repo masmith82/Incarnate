@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Gloom_Edge" load_steps=3 format=3 uid="uid://b2d6sj345mm1l"]
+
+[ext_resource type="Texture2D" uid="uid://ds2vu0gfqpkwh" path="res://GFX/Units/Traceless/gloom_edge.png" id="1_hlrw0"]
+[ext_resource type="Script" path="res://skills/Traceless/gloom_edge.gd" id="2_q5ltl"]
+
+[resource]
+script = ExtResource("2_q5ltl")
+name = "Gloom Edge"
+icon = ExtResource("1_hlrw0")
+cd = 2
+tt = "Strike a foe in melee range for 8 damage. Shadows copying this strike inflict Blind on
+	foes they strike."
+base_damage = 8

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Bloody_Rush" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="Bloody_Rush" load_steps=3 format=3 uid="uid://cbsqy7yb7obpf"]
 
 [ext_resource type="Texture2D" uid="uid://bngik8pnaxtrl" path="res://GFX/Units/Bloodthane/Icons/3BloodyRush.png" id="1_8o1vs"]
 [ext_resource type="Script" path="res://skills/Bloodthane/bloody_rush.gd" id="2_jfwgr"]

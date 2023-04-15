@@ -8,6 +8,7 @@ class_name Bloody_Rush
 @export var icon: Texture = preload("res://GFX/Units/Bloodthane/Icons/3BloodyRush.png")
 @export var cd: int = 3
 @export var tt: String = "Shift 3 squares, then deal 2 damage to each enemy in a square you passed through or passed adjacent to."
+@export var base_damage = 2
 var type = AREA
 
 func execute(unit):
@@ -50,7 +51,7 @@ func execute(unit):
 	enemies = enemies.filter(func(e): return e != null)
 
 	for e in enemies:
-		if e.is_in_group("enemy_units"): e.take_damage(unit, 2)
+		if e.is_in_group("enemy_units"): unit.deal_damage(e, base_damage)
 		
 	unit.finish_action("skill")
 	unit.cooldowns[name] = cd

@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="Bound_In_Blood" load_steps=2 format=3 uid="uid://d3pugbbl47pmj"]
+
+[ext_resource type="Script" path="res://skills/Traceless/illusive_shadows.gd" id="1_s2ssb"]
+
+[resource]
+script = ExtResource("1_s2ssb")

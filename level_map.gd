@@ -191,10 +191,8 @@ func tile_select(tile_id : Node2D):
 						g.deselect(g.current_actor) # NYI, will show enemy details
 					
 		g.POPUP_LOCKED: pass
-		g.NPC_SELECTION:
-			pass
-		g.ENEMY_TURN:
-			pass
+		g.NPC_SELECTION: pass
+		g.ENEMY_TURN: pass
 
 #######################
 # FUNCTION: validate_target
@@ -233,7 +231,11 @@ func validate_target(tile_id):
 				emit_signal("send_target", tile_id)
 				return tile_id
 	return
-			
+
+#func spawn_unit(unit : String, origin):
+#	var to_spawn = load(unit)
+#	var new_spawn = to_spawn.instantiate()
+
 #============================#
 # PATHFINDING / RANGEFINDING #
 # !!! these have been moved to skills_library for player units at least #

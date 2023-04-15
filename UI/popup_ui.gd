@@ -42,7 +42,7 @@ func setup_special_popup(popup_options : Array, target : Node2D):
 		await setup_special_button(new_button, p["pact"], target)
 		new_button.show()
 	g.set_select_state(g.POPUP_LOCKED)
-	unit.ui_bar.lock_actions()
+	get_tree().call_group(unit.group_name, "set_button_state")
 	await unit.special_popup_confirm
 	print("popup_finished")
 
@@ -61,8 +61,7 @@ func popup_effect(skill, effect_type):
 	popup_cleanup()
 	
 func popup_cleanup():
-	unit.ui_bar.unlock_actions()
-	unit.ui_bar.update_ui()
+	get_tree().call_group(unit.group_name, "set_button_state")
 	g.set_select_state(g.PLAYER_SELECT)
 	g.set_target_state(g.NO_TARGET)
 	queue_free()

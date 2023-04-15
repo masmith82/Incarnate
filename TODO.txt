@@ -1,8 +1,4 @@
-- consider changing button setup, have all buttons pull their info from skill resources
-- further consider letting each button handle it's own cooldowns/lockout status
-
 - fix various bloody rush targeting issues (can't repeat tiles)
-- finish implementation of shift completion (resolve unit collision)
 
 - consider turning the popui into a proper popup, which will help with exclusivity/lockout issues
 
@@ -12,9 +8,14 @@
 
 
 !!!
-- messed around with PLAYER_ACTION AND PLAYER_SELECT states so be careful...
+- messed around with PLAYER_ACTION AND PLAYER_SELECT states so be careful... SEEMS OK
 - need a better way to figure out when the UI is actually changing to pick out when
 	UI is sending commands to wrong unit
-- probably just rebuild the button UI system now yeah?
 - fix logic around action point check and changing target states... for example maneuvers can't
-	really be set to check for move points vs. action points at the moments
+	really be set to check for move points vs. action points at the moment
+
+!!!
+- queueing system needs more work as right now it can only copy the last action done. That's probably but
+	need to make sure that buttons are being replaced and not overwritten
+- also some weirdness with signals connecting to queued_cleanup, may be related
+- fix mirage shift so you can't teleport into obstacles

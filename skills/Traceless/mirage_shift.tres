@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Mirage_Shift" load_steps=3 format=3 uid="uid://baxnknefe8trc"]
+
+[ext_resource type="Texture2D" uid="uid://dw41b5wuebxl2" path="res://GFX/Units/Traceless/mirage_shift.png" id="1_hwavt"]
+[ext_resource type="Script" path="res://skills/Traceless/mirage_shift.gd" id="2_v2wol"]
+
+[resource]
+script = ExtResource("2_v2wol")
+name = "Mirage Shift"
+icon = ExtResource("1_hwavt")
+cd = 3
+tt = "Shift 2 squares, then strike an enemy for 3 damage."

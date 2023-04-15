@@ -47,7 +47,6 @@ func _on_input_event(viewport, event, shape_idx):
 
 func clear_tiles():
 	valid_selection = false
-	g.collision_tiles.clear()
 	$grid_outline.frame = 0
 	$grid_outline.modulate.a = 1
 

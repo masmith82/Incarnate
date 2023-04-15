@@ -3,16 +3,17 @@ class_name Bound_In_Blood
 
 enum {DOMINANCE, VAMPIRIC, PREDATION}
 var name = "Bound in Blood"
-var tt = "Whenever you strike a foe for the second time in a turn, you may bind a Pact. Bound
-		Pacts buff you and debuff your enemies. Pacts are permanent."
 
 class bt_passive extends buff:
+	
+	@export var tt = "Whenever you strike a foe for the second time in a turn, you may bind a Pact. Bound
+		Pacts buff you and debuff your enemies. Pacts are permanent."
+	@export var icon = preload("res://GFX/Units/Bloodthane/Icons/1 Bound in Blood.png")	
+	var type = PASS
+	
 	var popup = load("res://UI/popup_ui.tscn")
 	var p
-	
-	var tt = "Whenever you strike a foe for the second time in a turn, you may bind a Pact. Bound
-		Pacts buff you and debuff your enemies. Pacts are permanent."
-	
+		
 	var pacts = [{"name" : "Dominance Pact",
 	"icon" : "res://GFX/Units/Bloodthane/Icons/1 Bound in Blood.png",
 	"tt" : "Do some pact stuff.",

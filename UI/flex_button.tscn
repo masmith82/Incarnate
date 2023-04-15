@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://cebrrauqv5svn"]
+
+[ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://GFX/Generic Icons/cancel.png" id="1_oencu"]
+
+[node name="flex_button" type="TextureButton"]
+offset_right = 128.0
+offset_bottom = 128.0
+scale = Vector2(0.5, 0.5)
+size_flags_horizontal = 10
+size_flags_stretch_ratio = 8.01
+tooltip_text = "Cancel the current action."
+texture_normal = ExtResource("1_oencu")

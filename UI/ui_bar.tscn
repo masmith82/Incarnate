@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b28tqu5uijark"]
+[gd_scene load_steps=23 format=3 uid="uid://b28tqu5uijark"]
 
 [ext_resource type="Script" path="res://UI/ui_bar.gd" id="1_d7xfl"]
 [ext_resource type="Texture2D" uid="uid://c282mbqup610p" path="res://GFX/Generic Icons/empty-hourglass.png" id="2_qnyns"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://dstp87capw16l" path="res://GFX/UI/usable.png" id="9_p4cup"]
 [ext_resource type="Texture2D" uid="uid://b5gmd3no15xc6" path="res://GFX/UI/back-forth.png" id="10_qlmg2"]
 [ext_resource type="Texture2D" uid="uid://cqcb7yxk6pxil" path="res://GFX/Units/Bloodthane/Icons/walking-boot.png" id="11_m34ku"]
+[ext_resource type="Texture2D" uid="uid://y1rbng2tpqvh" path="res://GFX/Units/Traceless/illusive_shadows.png" id="11_sprhj"]
 [ext_resource type="Script" path="res://UI/action_button.gd" id="12_e8hpg"]
 [ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Units/Bloodthane/Icons/1 Blade FurySmall.png" id="13_hh0ok"]
 [ext_resource type="Texture2D" uid="uid://ch6jvwkj8of33" path="res://GFX/Units/Bloodthane/Icons/5 Reaving Claws.png" id="14_dc4rg"]
@@ -19,7 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://glfiso8m0xes" path="res://GFX/Units/Bloodthane/Icons/4VerveMagnet.png" id="17_trq4n"]
 [ext_resource type="Texture2D" uid="uid://ctk8kdeqakxiw" path="res://GFX/Units/Bloodthane/Icons/5AdrenalineSurge.png" id="18_3gf1h"]
 [ext_resource type="Texture2D" uid="uid://bs3wxrbsh8hxo" path="res://GFX/Units/Bloodthane/Icons/3 Bloodlust.png" id="19_iiwcu"]
-[ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://GFX/Generic Icons/cancel.png" id="20_37ts6"]
+[ext_resource type="PackedScene" uid="uid://cebrrauqv5svn" path="res://UI/flex_button.tscn" id="20_kkln5"]
 [ext_resource type="Texture2D" uid="uid://c0ushr3eipvym" path="res://GFX/UI/hotbarcenter.png" id="21_2yphg"]
 
 [node name="ui_bar" type="Control" groups=["menu"]]
@@ -77,7 +78,7 @@ offset_right = 2060.0
 offset_bottom = 128.0
 scale = Vector2(0.5, 0.5)
 pivot_offset = Vector2(16, 16)
-theme_override_constants/separation = 128
+theme_override_constants/separation = 32
 
 [node name="stats_container" type="VBoxContainer" parent="ui_icon_container"]
 layout_mode = 2
@@ -149,6 +150,14 @@ offset_bottom = 138.0
 scale = Vector2(0.45, 0.35)
 tooltip_text = "A Flex Action can be used as either a Move Action or a Skill action. Flex Actions are used last by default."
 texture = ExtResource("10_qlmg2")
+
+[node name="passive_container" type="VBoxContainer" parent="ui_icon_container"]
+layout_mode = 2
+size_flags_stretch_ratio = 5.0
+
+[node name="passive_button" type="TextureRect" parent="ui_icon_container/passive_container"]
+layout_mode = 2
+texture = ExtResource("11_sprhj")
 
 [node name="action_buttons" type="HBoxContainer" parent="ui_icon_container"]
 layout_mode = 2
@@ -290,12 +299,8 @@ theme_override_font_sizes/font_size = 64
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="cancel_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
+[node name="cancel_button" parent="ui_icon_container/action_buttons" instance=ExtResource("20_kkln5")]
 layout_mode = 2
-size_flags_horizontal = 10
-size_flags_stretch_ratio = 8.01
-tooltip_text = "Cancel the current action."
-texture_normal = ExtResource("20_37ts6")
 
 [node name="buff_bar" type="HBoxContainer" parent="."]
 layout_mode = 0

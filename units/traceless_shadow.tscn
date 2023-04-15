@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkf6nl00lv6oi"]
+
+[ext_resource type="Texture2D" uid="uid://y0sm67k8bxnc" path="res://GFX/Temp/traceless_sheet.png" id="1_0inhm"]
+[ext_resource type="Script" path="res://units/traceless_shadow.gd" id="1_nxbsy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1ypd"]
+atlas = ExtResource("1_0inhm")
+region = Rect2(0, 216, 48, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fn1lb"]
+atlas = ExtResource("1_0inhm")
+region = Rect2(48, 216, 48, 72)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b0442"]
+atlas = ExtResource("1_0inhm")
+region = Rect2(96, 216, 48, 72)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vvnls"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1ypd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fn1lb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b0442")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fn1lb")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="traceless_shadow" type="Node2D"]
+script = ExtResource("1_nxbsy")
+
+[node name="sprite_ph" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0.501961, 0.501961, 0.501961, 0.392157)
+sprite_frames = SubResource("SpriteFrames_vvnls")
+autoplay = "default"
