@@ -642,6 +642,7 @@ layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array(196612, 1310722, 6, 131080, 1310722, 6, 393222, 1310722, 6, 524289, 1310722, 6, 524298, 1310722, 6, 327690, 1310722, 6, 131074, 1310722, 6)
 
 [node name="map_grid_tiles" type="Node2D" parent="."]
+process_mode = 3
 
 [node name="enemy_controller" type="Node" parent="."]
 script = ExtResource("3_5hvvk")

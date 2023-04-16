@@ -14,7 +14,7 @@ var button = preload("res://UI/flex_button.tscn")
 func execute(unit):
 	var origin = unit.origin_tile
 	if !move_check(unit): return
-	target_basic(origin, 6)
+	target_basic(origin, 6, false)
 	var target = await g.level.send_target
 	if !target: return
 
@@ -22,12 +22,15 @@ func execute(unit):
 	unit.cooldowns[name] = cd
 	unit.finish_action("move")
 	
+	enable_shadow_swap(unit)
+
+func enable_shadow_swap(unit):
 	var new_button = button.instantiate()	# create a new temporary button for free shadow swap
 	unit.ui_bar.add_child(new_button)
 	new_button.position += Vector2(800, -64)
 	new_button.z_index = 5
-	var c = Callable(self, "shadow_swap")
-	var shadow_swap_call = c.bind(unit)
+	new_button.texture_normal = icon
+	var shadow_swap_call = Callable(self, "shadow_swap").bind(unit)
 	new_button.pressed.connect(shadow_swap_call)
 	
 func shadow_swap(unit):

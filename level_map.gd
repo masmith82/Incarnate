@@ -176,7 +176,7 @@ func tile_select(tile_id : Node2D):
 				if actor == g.current_actor: return		# if it's our current unit, do nothing
 				elif actor.is_in_group("player_units"): actor.set_player_actor()	# if it's another player unit, switch to that unit
 				elif actor.is_in_group("enemy_units"):
-					g.deselect(g.current_actor) # NYI, will show enemy details
+					g.deselect() # NYI, will show enemy details
 		g.PLAYER_ACTION:
 			if tile_id.valid_selection:
 				validate_target(tile_id)
@@ -188,7 +188,7 @@ func tile_select(tile_id : Node2D):
 					if actor == g.current_actor: return		# if it's our current unit, do nothing
 					elif actor.is_in_group("player_units"): actor.set_player_actor()	# if it's another player unit, switch to that unit
 					elif actor.is_in_group("enemy_units"):
-						g.deselect(g.current_actor) # NYI, will show enemy details
+						g.deselect() # NYI, will show enemy details
 					
 		g.POPUP_LOCKED: pass
 		g.NPC_SELECTION: pass

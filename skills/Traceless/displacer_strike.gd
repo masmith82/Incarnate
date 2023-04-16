@@ -12,7 +12,6 @@ var type = BASIC
 
 
 func execute(unit):
-	print('displacer', self)
 	var origin = unit.origin_tile
 	var path = []
 	if !action_check(unit, name, MOVE): return		# sets targeting to special if the action check passes
@@ -30,6 +29,8 @@ func execute(unit):
 	path = g.level.astar.get_id_path(origin.astar_index, shift_target.astar_index)
 	await basic_shift(unit, origin, 2, path)
 	if t: unit.deal_damage(t, base_damage)
+	
+
 	
 	if unit is Traceless_Shadow:
 		await unit.finish_action("skill")

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Skills_Library" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Skills_Library" load_steps=2 format=3 uid="uid://cebha8fflwsfa"]
 
 [ext_resource type="Script" path="res://skills/skills_library.gd" id="1_me0fp"]
 

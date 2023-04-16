@@ -9,3 +9,4 @@ name = "Bloody Rush"
 icon = ExtResource("1_8o1vs")
 cd = 3
 tt = "Shift 3 squares, then deal 2 damage to each enemy in a square you passed through or passed adjacent to."
+base_damage = 2

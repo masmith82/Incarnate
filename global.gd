@@ -1,4 +1,5 @@
 extends Node
+class_name Global_Controller
 
 #======================#
 # SINGLETON: Global
@@ -13,7 +14,7 @@ extends Node
 @onready var camera = get_node("/root/level/map_camera")
 @onready var enemy = level.find_child("enemy_controller")
 @onready var popup = preload("res://UI/popup_ui.tscn")
-
+var s	# will hold state machine
 #======================#
 # MATCH STATES
 # Used for controlling what actions the player can take depending on if they have a unit selected,
@@ -47,7 +48,7 @@ enum {NO_TARGET, PLAYER_MOVE, PLAYER_ATTACK, PLAYER_HELP, SPECIAL}
 # INSTANCE VARIABLES #
 #====================#
 
-var current_actor = null			# the current actor selected by the player or AI
+@onready var current_actor = null			# the current actor selected by the player or AI
 var action_queue = []
 
 #=========#
@@ -61,7 +62,10 @@ func _ready():
 	self.add_to_group("control")				# adds itself to "control" group for signal calls
 	Engine.register_singleton("Global", self)	# registers itself as a singleton.
 												# seems to be needed for reference-based scripts to find it.
-
+	
+	var state_machine = load("res://core/state_machine.tscn")
+	s = state_machine.instantiate()
+	set_process_mode(Node.PROCESS_MODE_ALWAYS)
 #=========#
 # SETTERS #
 #=========#
@@ -126,10 +130,9 @@ func post_action_cleanup(unit):
 # Called when a unit is deselected, either manually or after finishing an action.
 #######################
 
-func deselect(unit):
+func deselect():
 	reset_nav()
-	if unit and unit.is_in_group("player_units"):
-		unit.ui_bar.hide()
+	get_tree().call_group("player_units", "hide_ui")
 	current_actor = null
 	get_tree().call_group("menu", "hide_ui")
 	selection = NO_SELECTION
@@ -157,13 +160,13 @@ func unsuppress_collision():
 # - Probably need a way to cancel the queued action
 #==============================#
 
-func add_to_queue(unit, callable):
+func add_to_queue(unit, icon, callable):
 	var flex_button = load("res://UI/flex_button.tscn")
 	var new_button = flex_button.instantiate()				# create a new button for a queued action
-	add_child(new_button)
 	new_button.add_to_group("queued_action_buttons")
-	
-
+	new_button.texture_normal = icon
+	add_child(new_button)
+	action_queue.append(new_button)
 	new_button.set_global_position(unit.position)			# set position
 	new_button.z_index = 5
 	
@@ -175,9 +178,14 @@ func add_to_queue(unit, callable):
 	new_button.pressed.connect(call_queued)					# connect signals, button pressed activates skill
 	unit.queued_action_finished.connect(queued_cleanup)		# queued_action_finished is emitted from unit
 
+# !!! if we're going to pause the game, we need to lock out ALL other options including other flex buttons
+
 func resolve_queued_action(callable):
-	deselect(current_actor)
+	deselect()
 	callable.call()
 
 func queued_cleanup(button):
 	button.queue_free()
+	#get_tree().paused = false
+	if button in action_queue:
+		action_queue.erase(button)

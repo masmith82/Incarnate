@@ -44,6 +44,7 @@ func update_buff_bar():
 		if old_buffs.has(buff): continue
 		var new_buff = $buff_bar/buff_template.duplicate()
 		new_buff.tooltip_text = buff.tt
+		new_buff.texture = buff.icon
 		$buff_bar.add_child(new_buff)
 		new_buff.show()
 	old_buffs = unit.buffs.get_children()
@@ -52,5 +53,5 @@ func _on_cancel_button_pressed():
 	g.post_action_cleanup(unit)
 
 func _on_end_turn_button_pressed():
-	await g.deselect(unit)
+	await g.deselect()
 	unit.end_turn()	

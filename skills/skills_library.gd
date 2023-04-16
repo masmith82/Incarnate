@@ -135,14 +135,19 @@ func pathfind_shift(origin : Area2D, distance : int):
 func manual_path_shift(unit : Node2D, origin: Area2D = unit.origin_tile):
 	pathfind_shift(origin, 1)
 
-func target_basic(origin : Area2D, distance : int):
+func target_basic(origin : Area2D, distance : int, target_over_obstacles : bool = true):
 	if distance == 0:
 		return
 	for neighbor in origin.neighbors:
-		neighbor.set_highlight()
+		if target_over_obstacles == false:		# by default this allows targeting units over obstacles (flyers)
+			if neighbor.obstacle == true:		# sometimes we want to disable this behavior
+				continue						# !!! this may cause problems when lots of obstacles are present?
+
+		neighbor.set_highlight()				# highlights everything within range by default
 		neighbor.valid_selection = true
+		
 		if distance > 0:
-			target_basic(neighbor, (distance - 1))
+			target_basic(neighbor, (distance - 1), target_over_obstacles)
 			
 func target_self(origin: Area2D):
 	origin.valid_selection = true
@@ -230,6 +235,7 @@ class buff extends Node:
 	var duration
 	var unit
 	var stacks
+	@export var icon = preload("res://GFX/Generic Icons/blank_square.png")	
 	var callable = Callable(self, "buff_stuff")
 	
 	func _ready():

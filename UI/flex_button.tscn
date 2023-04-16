@@ -1,12 +1,49 @@
-[gd_scene load_steps=2 format=3 uid="uid://cebrrauqv5svn"]
+[gd_scene load_steps=6 format=3 uid="uid://cebrrauqv5svn"]
 
-[ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://GFX/Generic Icons/cancel.png" id="1_oencu"]
+[ext_resource type="Texture2D" uid="uid://caqlp6sufq4gp" path="res://GFX/Generic Icons/blank_square.png" id="1_bdmsu"]
+[ext_resource type="Script" path="res://UI/flex_button.gd" id="2_x1jk5"]
+
+[sub_resource type="Gradient" id="Gradient_noohj"]
+colors = PackedColorArray(0.392157, 0.392157, 0.392157, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_up3cu"]
+gradient = SubResource("Gradient_noohj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dwh8s"]
+emission_shape = 3
+emission_box_extents = Vector3(64, 64, 200)
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 100.0
+angular_velocity_min = 25.0
+angular_velocity_max = 50.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+linear_accel_min = -50.0
+linear_accel_max = -50.0
+radial_accel_min = 10.0
+radial_accel_max = 25.0
+scale_min = 2.0
+scale_max = 2.0
+color = Color(1, 1, 0, 1)
+color_ramp = SubResource("GradientTexture1D_up3cu")
 
 [node name="flex_button" type="TextureButton"]
+process_mode = 3
+z_index = 2
 offset_right = 128.0
 offset_bottom = 128.0
 scale = Vector2(0.5, 0.5)
 size_flags_horizontal = 10
 size_flags_stretch_ratio = 8.01
 tooltip_text = "Cancel the current action."
-texture_normal = ExtResource("1_oencu")
+texture_normal = ExtResource("1_bdmsu")
+script = ExtResource("2_x1jk5")
+
+[node name="flex_button_highlight" type="GPUParticles2D" parent="."]
+position = Vector2(64, 64)
+scale = Vector2(0.75, 0.75)
+amount = 15
+process_material = SubResource("ParticleProcessMaterial_dwh8s")

@@ -105,7 +105,7 @@ func init_cooldowns():
 
 func set_player_actor():
 	if g.current_actor:
-		g.deselect(g.current_actor)		# if we have an actor selected, deselect it
+		g.deselect()		# if we have an actor selected, deselect it
 	get_unit_pos()
 	g.set_select_state(g.PLAYER_SELECT)
 	g.current_actor = self
@@ -113,11 +113,11 @@ func set_player_actor():
 	ui_bar.show()
 
 #=================#
-# FUNCTION: hide_menu
+# FUNCTION: hide_ui
 # Hide's the unit's UI bar
 #=================#
 
-func hide_menu():
+func hide_ui():
 	ui_bar.hide()
 
 #=================#
@@ -164,12 +164,13 @@ func start_turn_upkeep():
 	print(name, " turn start upkeep")
 	for k in action_pool:
 		action_pool[k] = default_action_pool[k]
-		print(action_pool)
 	for cd in cooldowns:
 		if cooldowns[cd] > 0: cooldowns[cd] -= 1
 		get_tree().call_group(group_name, "set_button_state")
+	action_handler()
 	get_tree().call_group(group_name, "update_actions_ui")
-		
+	get_tree().call_group(group_name, "set_button_state")
+
 #=================#
 # FUNCTION: end_turn
 # Clears any targetting data, confirms the unit's position and state, informs game controller than
@@ -180,7 +181,6 @@ func start_turn_upkeep():
 func end_turn():
 	g.reset_nav()
 	get_unit_pos()
-	action_handler()
 	g.selection = g.NO_SELECTION
 	g.end_player_turn()
 

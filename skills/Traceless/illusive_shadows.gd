@@ -7,13 +7,15 @@ class tl_passive extends buff:
 
 	@export var tt = "When you shift out of a square, you may place a shadow on that square. You can't have more than
 		3 shadows on the field at one time."
-	@export var icon = preload("res://GFX/Units/Traceless/illusive_shadows.png")
+
+	
 	var g = Engine.get_singleton("Global")
 	var shadow = preload("res://units/traceless_shadow.tscn")
 	var type = PASS
 	
 	func _init():
 		name = "Illusive Shadows"
+		icon = preload("res://GFX/Units/Traceless/illusive_shadows.png")		
 	
 	func _ready():		# override
 		unit = get_parent().get_parent()
