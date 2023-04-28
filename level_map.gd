@@ -8,8 +8,8 @@ extends Node
 #====================#
 # INSTANCE VARIABLES #
 #====================#
+var skill_lib = load("res://skills/skills_library.tres")
 
-@onready var g = get_node("/root/Global")
 var new_tile = preload("res://grid_tile.tscn")
 var actor = preload("res://actor.tscn")
 
@@ -35,15 +35,18 @@ signal special_select		# !!! might be deprecated?
 func _ready():
 	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER	# set astar to only use orthagonal movement
 	init_astar_map()	# load the map on ready
-
-func _process(delta):
+	
+func _process(_delta):
 	debug()
 
 func debug():
-	var y = null
-	var x = g.current_actor if g.current_actor else null
+	var x
+	var y
+	if Global.current_actor != null:
+		x = Global.current_actor
+		y = Global.current_actor.states.actor_state.name
 		
-	$map_camera/debug.text = "selection: %s\n targeting: %s\ncurrent_actor: %s\n queued_action: %s\n" % [g.selection, g.targeting, x, y]
+	$map_camera/debug.text = "selection: %s\n target_type: %s\ncurrent_actor: %s\n actor_state: %s\n" % [Global.s.game_state, Global.s.target_color, x, y]
 	
 
 #=====================#
@@ -163,75 +166,9 @@ func confirm_units():
 #######################
 
 func tile_select(tile_id : Node2D):
-	var actor = tile_id.get_unit_on_tile()
-	print("valid: ", tile_id.valid_selection, " - occupied: ", tile_id.occupied, " - obstacle: ", tile_id.obstacle)
-	
-	match g.selection:
-		g.NO_SELECTION:
-			g.reset_nav()
-			if actor and actor.is_in_group("player_units"):
-				actor.set_player_actor()
-		g.PLAYER_SELECT:
-			if actor:	# if there's a unit on the clicked tile...
-				if actor == g.current_actor: return		# if it's our current unit, do nothing
-				elif actor.is_in_group("player_units"): actor.set_player_actor()	# if it's another player unit, switch to that unit
-				elif actor.is_in_group("enemy_units"):
-					g.deselect() # NYI, will show enemy details
-		g.PLAYER_ACTION:
-			if tile_id.valid_selection:
-				validate_target(tile_id)
-			else:
-				g.reset_nav()
-				emit_signal("send_target", null)
-				g.post_action_cleanup(g.current_actor)
-				if actor:	# if there's a unit on the clicked tile...
-					if actor == g.current_actor: return		# if it's our current unit, do nothing
-					elif actor.is_in_group("player_units"): actor.set_player_actor()	# if it's another player unit, switch to that unit
-					elif actor.is_in_group("enemy_units"):
-						g.deselect() # NYI, will show enemy details
-					
-		g.POPUP_LOCKED: pass
-		g.NPC_SELECTION: pass
-		g.ENEMY_TURN: pass
-
-#######################
-# FUNCTION: validate_target
-# Called by tile_select if a player unit is in an active targeting state. While in this state, waits
-# for user input, and signals the skill to execute when it receives target data.
-# Currently "special" state doesn't do anything
-#######################
-
-func validate_target(tile_id):
-	var target = tile_id.get_unit_on_tile()
-#	var c = 0
-#	while c == 0:
-#		await get_tree().create_timer(.1).timeout
-
-	match g.targeting:
-		g.PLAYER_MOVE:
-			if tile_id.valid_selection == true and tile_id.occupied == false:
-				print("Validate movement tile.")					
-				emit_signal("send_target", tile_id)
-				return tile_id
-		g.PLAYER_ATTACK:
-			if tile_id.valid_selection == true and tile_id.occupied == true:
-				print("Validate target tile.")
-				emit_signal("send_target", tile_id)
-				return tile_id
-		g.PLAYER_HELP:
-			if tile_id.valid_selection == true and tile_id.occupied == true:
-				if target.is_in_group("player_units"):
-					print("validing player help")
-					print("Validate support tile.")
-					emit_signal("send_target", tile_id)
-					return tile_id
-		g.SPECIAL:			# This currently doesn't really do anything
-			if tile_id.valid_selection:
-				print("Validate special tile.")
-				emit_signal("send_target", tile_id)
-				return tile_id
+	Global.s.game_state.handle_click(tile_id)
 	return
-
+	
 #func spawn_unit(unit : String, origin):
 #	var to_spawn = load(unit)
 #	var new_spawn = to_spawn.instantiate()

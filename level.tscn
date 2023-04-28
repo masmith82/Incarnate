@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bek2e8iql87yy"]
+[gd_scene load_steps=11 format=3 uid="uid://baf3qia43sp5u"]
 
 [ext_resource type="Texture2D" uid="uid://ibe10rob2eog" path="res://GFX/Tilesets/tilesheet_complete.png" id="1_4ltib"]
 [ext_resource type="Script" path="res://level_map.gd" id="2_gf2dy"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://map_camera.gd" id="6_h63dk"]
 [ext_resource type="PackedScene" uid="uid://gr6wsoitm41a" path="res://units/bloodthane.tscn" id="6_x1331"]
 [ext_resource type="PackedScene" uid="uid://cnt2cx5i4pbue" path="res://units/traceless.tscn" id="7_4icnd"]
+[ext_resource type="PackedScene" uid="uid://ddhdlmxwdcwhx" path="res://core/game_states/state_machine.tscn" id="8_h2f6k"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xrsnc"]
 texture = ExtResource("1_4ltib")
@@ -642,22 +643,20 @@ layer_1/z_index = 0
 layer_1/tile_data = PackedInt32Array(196612, 1310722, 6, 131080, 1310722, 6, 393222, 1310722, 6, 524289, 1310722, 6, 524298, 1310722, 6, 327690, 1310722, 6, 131074, 1310722, 6)
 
 [node name="map_grid_tiles" type="Node2D" parent="."]
-process_mode = 3
 
 [node name="enemy_controller" type="Node" parent="."]
 script = ExtResource("3_5hvvk")
 
-[node name="enemy_actor" parent="enemy_controller" instance=ExtResource("5_0d166")]
-position = Vector2(512, 448)
-max_health = 14
-
 [node name="enemy_actor2" parent="enemy_controller" instance=ExtResource("5_0d166")]
-position = Vector2(448, 384)
+position = Vector2(576, 320)
+
+[node name="enemy_actor3" parent="enemy_controller" instance=ExtResource("5_0d166")]
+position = Vector2(640, 384)
 
 [node name="player_units" type="Node" parent="."]
 
 [node name="bloodthane" parent="player_units" instance=ExtResource("6_x1331")]
-position = Vector2(384, 256)
+position = Vector2(576, 384)
 
 [node name="traceless" parent="player_units" groups=["bloodthane"] instance=ExtResource("7_4icnd")]
 position = Vector2(512, 384)
@@ -669,6 +668,8 @@ script = ExtResource("6_h63dk")
 
 [node name="debug" type="Label" parent="map_camera"]
 offset_left = 320.0
-offset_top = -320.0
+offset_top = -256.0
 offset_right = 464.0
-offset_bottom = -56.0
+offset_bottom = 8.0
+
+[node name="turn_state_machine" parent="." instance=ExtResource("8_h2f6k")]

@@ -1,4 +1,4 @@
-extends "res://actor.gd"
+extends Actor
 
 func _init():
 	group_name = "bt_ui"
@@ -8,6 +8,7 @@ func _init():
 
 func _ready():
 	health = max_health
+	movement = base_movement
 	setup_unit()
 
 func init_passive():

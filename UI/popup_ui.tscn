@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://0ar6ixygheuf"]
 
 [ext_resource type="Script" path="res://UI/popup_ui.gd" id="1_vious"]
 [ext_resource type="Texture2D" uid="uid://csa8tkqymnhq3" path="res://cancel.png" id="2_fy10f"]

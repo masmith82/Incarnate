@@ -9,3 +9,13 @@ name = "Mirage Shift"
 icon = ExtResource("1_hwavt")
 cd = 3
 tt = "Shift 2 squares, then strike an enemy for 3 damage."
+target_info = {
+"color": 1,
+"disjointed": [],
+"target": 2
+}
+special_info = {
+"color": 1,
+"disjointed": [],
+"target": 3
+}

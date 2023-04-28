@@ -10,8 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://2hf28wjhst64" path="res://GFX/UI/walking-boot.png" id="8_7b2ew"]
 [ext_resource type="Texture2D" uid="uid://dstp87capw16l" path="res://GFX/UI/usable.png" id="9_p4cup"]
 [ext_resource type="Texture2D" uid="uid://b5gmd3no15xc6" path="res://GFX/UI/back-forth.png" id="10_qlmg2"]
-[ext_resource type="Texture2D" uid="uid://cqcb7yxk6pxil" path="res://GFX/Units/Bloodthane/Icons/walking-boot.png" id="11_m34ku"]
 [ext_resource type="Texture2D" uid="uid://y1rbng2tpqvh" path="res://GFX/Units/Traceless/illusive_shadows.png" id="11_sprhj"]
+[ext_resource type="Texture2D" uid="uid://c6j5jgseo6586" path="res://GFX/Generic Icons/walking-boot.png" id="12_8v4ao"]
 [ext_resource type="Script" path="res://UI/action_button.gd" id="12_e8hpg"]
 [ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Units/Bloodthane/Icons/1 Blade FurySmall.png" id="13_hh0ok"]
 [ext_resource type="Texture2D" uid="uid://ch6jvwkj8of33" path="res://GFX/Units/Bloodthane/Icons/5 Reaving Claws.png" id="14_dc4rg"]
@@ -166,7 +166,7 @@ size_flags_horizontal = 3
 [node name="basic_move_button" type="TextureButton" parent="ui_icon_container/action_buttons"]
 layout_mode = 2
 size_flags_horizontal = 6
-texture_normal = ExtResource("11_m34ku")
+texture_normal = ExtResource("12_8v4ao")
 script = ExtResource("12_e8hpg")
 
 [node name="cd_label" type="Label" parent="ui_icon_container/action_buttons/basic_move_button"]
@@ -322,5 +322,4 @@ texture = ExtResource("21_2yphg")
 expand_mode = 2
 
 [connection signal="pressed" from="end_turn_button" to="." method="_on_end_turn_button_pressed"]
-[connection signal="pressed" from="ui_icon_container/action_buttons/basic_move_button" to="." method="_on_basic_move_button_pressed" flags=18]
 [connection signal="pressed" from="ui_icon_container/action_buttons/cancel_button" to="." method="_on_cancel_button_pressed"]

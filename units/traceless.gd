@@ -1,4 +1,4 @@
-extends "res://actor.gd"
+extends Actor
 
 func _init():
 	group_name = "tl_ui"
@@ -20,6 +20,6 @@ func spawn_shadow(target):
 	var shadow = load("res://units/traceless_shadow.tscn")
 	var new_shadow = shadow.instantiate()
 	new_shadow.position = target.position
-	g.level.add_child(new_shadow)
+	Global.level.add_child(new_shadow)
 	new_shadow.add_to_group("traceless_shadow")
 	new_shadow.origin_tile = target

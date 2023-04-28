@@ -31,7 +31,6 @@ color = Color(1, 1, 0, 1)
 color_ramp = SubResource("GradientTexture1D_up3cu")
 
 [node name="flex_button" type="TextureButton"]
-process_mode = 3
 z_index = 2
 offset_right = 128.0
 offset_bottom = 128.0

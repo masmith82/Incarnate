@@ -6,12 +6,13 @@
 #======================#
 
 extends Area2D
+class_name Grid_Tile
 
 #====================#
 # INSTANCE VARIABLES
 #====================#
 
-@onready var g = get_node("/root/Global")		# quick reference to Global singleton
+@onready var grid_text = $grid_text
 @export var move_cost = 1						# move cost multiplier for rough terrain
 
 var astar_index = Vector2i(0,0)					# astar position of the tile
@@ -24,9 +25,6 @@ func _ready():
 	await get_tree().create_timer(.1).timeout		# slight delay to generate the map fully
 	$coords.text = str(astar_index, "t" if occupied == true else "f")		# debug: displays tile astar pos
 	
-func _process(delta):
-	pass
-
 #######################
 # SIGNALLED FUNCTION: on_input_event
 # Gets clicks and notifies the map of the ID of the tile that was selected
@@ -34,10 +32,10 @@ func _process(delta):
 # @event: the mouse click
 #######################
 	
-func _on_input_event(viewport, event, shape_idx):
+func _on_input_event(_viewport, event, _shape_idx):
 	if event.is_action_pressed("left_click"):
 		get_tree().call_group("map", "tile_select", self)
-#		g.level.tile_select(astar_index)	# in case something breaks?
+#		Global.level.tile_select(astar_index)	# in case something breaks?
 
 #######################
 # FUNCTION: clear_tiles
@@ -49,6 +47,7 @@ func clear_tiles():
 	valid_selection = false
 	$grid_outline.frame = 0
 	$grid_outline.modulate.a = 1
+	$grid_text.text = ""
 
 #######################
 # FUNCTION: get_unit_on_tile
@@ -68,18 +67,22 @@ func get_unit_on_tile() -> Node2D:
 # Sets the color of valid selectable tiles depending on the current action state.
 # Movement: Cyan. Attacks: Red. Support: Green.
 #######################
+
+enum {ATTACK_TARGET, MOVE_TARGET, AID_TARGET, SPECIAL_TARGET}
 	
 func set_highlight():
-	match g.targeting:
-		g.PLAYER_MOVE:
+	print("new target from grid")
+
+	match Global.s.target_color:
+		MOVE_TARGET:
 			$grid_outline.frame = 1
 			$grid_outline.modulate.a = .5
-		g.PLAYER_ATTACK:
+		ATTACK_TARGET:
 			$grid_outline.frame = 2
-		g.PLAYER_HELP:
+		AID_TARGET:
 			$grid_outline.frame = 3
-		g.SPECIAL:
-			$grid_outline.frame = 2	
+		SPECIAL_TARGET:
+			$grid_outline.frame = 4
 
 #######################
 # FUNCTION: suppress_collision
@@ -91,8 +94,8 @@ func set_highlight():
 
 func suppress_collision():
 	if occupied == true and obstacle == false:
-		g.level.astar.set_point_solid(astar_index, false)
-		g.collision_tiles.append(self)
+		Global.level.astar.set_point_solid(astar_index, false)
+		Global.collision_tiles.append(self)
 
 #######################
 # FUNCTION: unsuppress_collision
@@ -102,10 +105,10 @@ func suppress_collision():
 func unsuppress_collision():
 	if get_unit_on_tile():
 		get_tree().call_group("units", "unsuppress_tile")
-		g.level.astar.set_point_solid(self.astar_index, true)
+		Global.level.astar.set_point_solid(self.astar_index, true)
 		occupied = true
 		print(astar_index, " ", occupied)
-	g.collision_tiles.clear()
+	Global.collision_tiles.clear()
 
 
 #######################
@@ -116,7 +119,7 @@ func unsuppress_collision():
 
 func _on_area_entered(area):
 	occupied = true
-	g.level.astar.set_point_solid(astar_index, true)
+	Global.level.astar.set_point_solid(astar_index, true)
 
 #######################
 # SIGNALLED FUNCTION: on_area_exited
@@ -127,7 +130,7 @@ func _on_area_entered(area):
 func _on_area_exited(area):
 	if !get_unit_on_tile():
 		occupied = false
-		g.level.astar.set_point_solid(astar_index, false)
+		Global.level.astar.set_point_solid(astar_index, false)
 
 # for debug
 

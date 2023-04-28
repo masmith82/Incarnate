@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7qcsy186pyu6"
-path="res://.godot/imported/2 Bloody Rush.png-28c8136cfce48e02bba52cb4f6d39ec5.ctex"
+uid="uid://dj5yw18ts7d38"
+path="res://.godot/imported/bt_predation_pact.PNG-7ff204b0e0192c6d5e3fa8bf38bff351.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://GFX/2 Bloody Rush.png"
-dest_files=["res://.godot/imported/2 Bloody Rush.png-28c8136cfce48e02bba52cb4f6d39ec5.ctex"]
+source_file="res://GFX/Animations/bt_predation_pact.PNG"
+dest_files=["res://.godot/imported/bt_predation_pact.PNG-7ff204b0e0192c6d5e3fa8bf38bff351.ctex"]
 
 [params]
 

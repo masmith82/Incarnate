@@ -21,3 +21,5 @@ func update_actions_ui():
 	
 	if unit.action_pool["flex"] < 1: $flex_action.self_modulate = Color(Color.DARK_SLATE_GRAY, .5)
 	else: $flex_action.self_modulate = Color(1,1,1,1)
+	
+	print(unit.action_pool)

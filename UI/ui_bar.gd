@@ -1,7 +1,14 @@
 extends Control
+class_name UI_Bar
 
-@onready var g = get_node("/root/Global")
-@onready var camera = g.camera
+@onready var camera = Global.camera
+@onready var buffs = $buff_bar
+
+#======================
+# CLASS: UI_Bar
+# Controller for the bottom UI frame that contains unit stats, buffs and buttons.
+#======================
+
 
 enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
 
@@ -14,6 +21,13 @@ func setup_ui(linked_unit):
 	unit = linked_unit
 	linked_unit.ui_bar = self
 	link_buttons()
+
+func setup_NPC_ui(linked_unit):
+	unit = linked_unit
+	linked_unit.ui_bar = self
+	$ui_icon_container/action_buttons.queue_free()	# janky way of deleting the action buttons
+	$ui_icon_container/stats_container/health_bar.add_to_group(unit.group_name)
+	$ui_icon_container/stats_container/health_bar.set_ui_detail(unit)
 
 func link_buttons():
 	for child in $ui_icon_container/action_buttons.get_children():
@@ -43,15 +57,19 @@ func update_buff_bar():
 	for buff in	unit.buffs.get_children():
 		if old_buffs.has(buff): continue
 		var new_buff = $buff_bar/buff_template.duplicate()
+		new_buff.name = buff.name
 		new_buff.tooltip_text = buff.tt
 		new_buff.texture = buff.icon
+		buff.ui_icon = new_buff
 		$buff_bar.add_child(new_buff)
 		new_buff.show()
 	old_buffs = unit.buffs.get_children()
 
 func _on_cancel_button_pressed():
-	g.post_action_cleanup(unit)
+	Global.s.change_selection_state("player_select")
+	unit.emit_signal("send_target", null)
+	get_tree().call_group(unit.group_name, "set_button_state")
 
 func _on_end_turn_button_pressed():
-	await g.deselect()
-	unit.end_turn()	
+	await Global.deselect()
+	unit.end_turn()

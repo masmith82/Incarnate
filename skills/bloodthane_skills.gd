@@ -4,7 +4,7 @@ class_name Bloodthane_Skills
 var skill_list = {	PASS	:	preload("res://skills/Bloodthane/bound_in_blood.tres"),
 					MOVE	:	preload("res://skills/basic_move.tres"),
 					BASIC	:	preload("res://skills/Bloodthane/blade_fury.tres"),
-					HEAVY	:	null,
+					HEAVY	:	preload("res://skills/Bloodthane/ravage.tres"),
 					AREA	:	preload("res://skills/Bloodthane/bloody_rush.tres"),
 					DEF		:	preload("res://skills/Bloodthane/acute_coagulant.tres"),
 					MNVR	:	preload("res://skills/Bloodthane/verve_magnet.tres"),

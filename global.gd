@@ -14,18 +14,9 @@ class_name Global_Controller
 @onready var camera = get_node("/root/level/map_camera")
 @onready var enemy = level.find_child("enemy_controller")
 @onready var popup = preload("res://UI/popup_ui.tscn")
+@onready var skill_lib = load("res://skills/skills_library.tres")
+@onready var blank_icon = load("res://GFX/Generic Icons/blank_square.png")
 var s	# will hold state machine
-#======================#
-# MATCH STATES
-# Used for controlling what actions the player can take depending on if they have a unit selected,
-# an ability/movement queued, and so on.
-#======================#
-
-enum {NO_SELECTION, PLAYER_SELECT, PLAYER_ACTION, NPC_SELECTION, ENEMY_TURN, UPKEEP, POPUP_LOCKED}
-enum {NO_TARGET, PLAYER_MOVE, PLAYER_ATTACK, PLAYER_HELP, SPECIAL}
-
-@onready var selection = NO_SELECTION
-@onready var targeting = NO_TARGET
 
 #======================#
 # KEY GROUPS AND SIGNALS
@@ -62,38 +53,27 @@ func _ready():
 	self.add_to_group("control")				# adds itself to "control" group for signal calls
 	Engine.register_singleton("Global", self)	# registers itself as a singleton.
 												# seems to be needed for reference-based scripts to find it.
-	
-	var state_machine = load("res://core/state_machine.tscn")
+	var state_machine = load("res://core/game_states/state_machine.tscn")
 	s = state_machine.instantiate()
-	set_process_mode(Node.PROCESS_MODE_ALWAYS)
-#=========#
-# SETTERS #
-#=========#
-
-func set_select_state(state):
-	selection = state
-	
-func set_target_state(state):
-	targeting = state
-	
-func get_select_state() -> int:
-	return selection
-	
-func get_target_state() -> int:
-	return targeting
+	add_child(s)
 
 #===============#
 # TURN HANDLING #
 #===============#
 
 func end_player_turn():
-	selection = ENEMY_TURN
-	emit_signal("start_turn")		# !!! temporary for testing buffs, will need to expand and modify
+	deselect()
+	s.change_selection_state("no_selection")
 	get_tree().call_group("queued_action_buttons", "queue_free")
+	emit_signal("end_turn")
 	enemy.start_enemy_turn()
 
 func end_enemy_turn():
-	selection = NO_SELECTION
+	deselect()
+	s.change_selection_state("no_selection")
+	print("Player turn start!")
+	emit_signal("start_turn")		# !!! temporary for testing buffs, will need to expand and modify
+	select_unit(get_tree().get_first_node_in_group("player_units"))
 
 #=====================#
 # GLOBAL NAV HANDLING #
@@ -109,35 +89,24 @@ func reset_nav():
 	get_tree().call_group("tiles", "clear_tiles")
 
 #######################
-# FUNCTION: post_action_cleanup
-# After a unit complets an action, resets selection/targeting and pathfinding and confirms unit's map pos
-#######################
-
-func post_action_cleanup(unit):
-	set_select_state(PLAYER_SELECT)
-	set_target_state(NO_TARGET)
-	level.emit_signal("send_target", null)	# feels like this shouldn't work? added null here?
-	
-	if unit:
-		unit.get_unit_pos()
-		get_tree().call_group(unit.group_name, "set_button_state")
-		get_tree().call_group(unit.group_name, "update_actions_ui")
-
-	reset_nav()
-
-#######################
 # FUNCTION: deselect
 # Called when a unit is deselected, either manually or after finishing an action.
 #######################
 
 func deselect():
 	reset_nav()
-	get_tree().call_group("player_units", "hide_ui")
+	get_tree().call_group("units", "hide_ui")
+	if current_actor:
+		current_actor.states.set_unit_state("actor_idle")
 	current_actor = null
-	get_tree().call_group("menu", "hide_ui")
-	selection = NO_SELECTION
-	targeting = NO_TARGET
 
+
+func select_unit(unit):
+	deselect()					# deselect current selection
+	current_actor = unit			# set global actor to this unit
+	unit.states.set_unit_state("actor_selected")
+
+	
 func suppress_collision():
 	get_tree().call_group("units", "suppress_collision")
 	
@@ -160,18 +129,18 @@ func unsuppress_collision():
 # - Probably need a way to cancel the queued action
 #==============================#
 
-func add_to_queue(unit, icon, callable):
+func add_to_queue(unit, skill, callable):
 	var flex_button = load("res://UI/flex_button.tscn")
 	var new_button = flex_button.instantiate()				# create a new button for a queued action
 	new_button.add_to_group("queued_action_buttons")
-	new_button.texture_normal = icon
+	new_button.texture_normal = skill.icon
 	add_child(new_button)
 	action_queue.append(new_button)
 	new_button.set_global_position(unit.position)			# set position
 	new_button.z_index = 5
 	
 	var c = Callable(self, "resolve_queued_action")			# link callable to button
-	var call_queued = c.bind(callable)
+	var call_queued = c.bind(callable, unit, skill)
 	var q = Callable(self, "queued_cleanup")				# link cleanup callable
 	var queued_cleanup = q.bind(new_button)
 
@@ -180,8 +149,10 @@ func add_to_queue(unit, icon, callable):
 
 # !!! if we're going to pause the game, we need to lock out ALL other options including other flex buttons
 
-func resolve_queued_action(callable):
+func resolve_queued_action(callable, unit, skill):
 	deselect()
+	s.change_selection_state("player_target", skill.target_info.duplicate(true))
+	current_actor = unit
 	callable.call()
 
 func queued_cleanup(button):

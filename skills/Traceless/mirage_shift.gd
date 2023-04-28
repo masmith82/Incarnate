@@ -7,15 +7,24 @@ class_name Mirage_Shift
 @export var icon: Texture = preload("res://GFX/Units/Traceless/mirage_shift.png")
 @export var cd: int = 3
 @export var tt: String = "Create a Shadow in target square. This turn you may swap squares with a Shadow as a free action."
+@export var target_info =  {"target" : NEEDS_OPEN,
+							"color" : MOVE_TARGET,
+							"disjointed" :	[]
+							}
 
-var type = HEAVY
+@export var special_info =  {"target" : NEEDS_ENEMY,
+							"color" : MOVE_TARGET,
+							"disjointed" :	[]
+							}
+
+var type = MNVR
 var button = preload("res://UI/flex_button.tscn")
 
 func execute(unit):
 	var origin = unit.origin_tile
 	if !move_check(unit): return
 	target_basic(origin, 6, false)
-	var target = await g.level.send_target
+	var target = await unit.send_target
 	if !target: return
 
 	unit.spawn_shadow(target)
@@ -36,24 +45,24 @@ func enable_shadow_swap(unit):
 func shadow_swap(unit):
 	reset_nav()							# makeshift version of new_action/lock_actions
 	unit.get_unit_pos()
-	g.set_select_state(PLAYER_ACTION)
-	g.set_target_state(PLAYER_MOVE)
-	g.get_tree().call_group(unit.group_name, "set_button_state")
+	Global.s.change_selection_state("player_target", special_info)
+	Global.get_tree().call_group(unit.group_name, "set_button_state")
 	var origin = unit.origin_tile
 	
 	# call each shadow to highlight and validate it's own tile
-	g.get_tree().call_group("traceless_shadow", "shadow_swap_highlight")	
-	var target = await g.level.send_target
+	Global.get_tree().call_group("traceless_shadow", "shadow_swap_highlight")
+	var target = await unit.send_target
 	if !target: return
-	
+
 	unit.position = target.position
-	g.get_tree().call_group("traceless_shadow", "kill_shadow_at_tile", target)
+	Global.get_tree().call_group("traceless_shadow", "kill_shadow_at_tile", target)
 	unit.spawn_shadow(unit.origin_tile)
 	unit.get_unit_pos()
 	
 	# makeshift cleanup
-	g.set_select_state(PLAYER_SELECT)
-	g.set_target_state(NO_TARGET)
+	Global.s.change_selection_state("player_select")
 	reset_nav()
-	g.get_tree().call_group(unit.group_name, "set_button_state")
-	g.get_tree().call_group(unit.group_name, "update_actions_ui")
+	Global.get_tree().call_group(unit.group_name, "set_button_state")
+	Global.get_tree().call_group(unit.group_name, "update_actions_ui")
+
+# !!! error message is coming from shadow being deleted and respawned

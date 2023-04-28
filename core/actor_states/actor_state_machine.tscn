@@ -1,0 +1,34 @@
+[gd_scene load_steps=9 format=3 uid="uid://cnuxje16d2cj6"]
+
+[ext_resource type="Script" path="res://core/actor_states/actor_state_machine.gd" id="1_5pwgr"]
+[ext_resource type="Script" path="res://core/actor_states/actor_idle.gd" id="2_n2l5d"]
+[ext_resource type="Script" path="res://core/actor_states/actor_selected.gd" id="3_ji1qo"]
+[ext_resource type="Script" path="res://core/actor_states/actor_acting.gd" id="4_w8lc6"]
+[ext_resource type="Script" path="res://core/actor_states/actor_targeted.gd" id="5_fdvxc"]
+[ext_resource type="Script" path="res://core/actor_states/actor_resolve_ready.gd" id="6_3d1ny"]
+[ext_resource type="Script" path="res://core/actor_states/actor_animating.gd" id="7_gn8ur"]
+[ext_resource type="Script" path="res://core/actor_states/actor_finished.gd" id="8_mlh54"]
+
+[node name="actor_state_machine" type="Node"]
+script = ExtResource("1_5pwgr")
+
+[node name="actor_idle" type="Node" parent="."]
+script = ExtResource("2_n2l5d")
+
+[node name="actor_selected" type="Node" parent="."]
+script = ExtResource("3_ji1qo")
+
+[node name="actor_attacking" type="Node" parent="."]
+script = ExtResource("4_w8lc6")
+
+[node name="actor_under_attack" type="Node" parent="."]
+script = ExtResource("5_fdvxc")
+
+[node name="actor_resolve_ready" type="Node" parent="."]
+script = ExtResource("6_3d1ny")
+
+[node name="actor_animating" type="Node" parent="."]
+script = ExtResource("7_gn8ur")
+
+[node name="actor_finished" type="Node" parent="."]
+script = ExtResource("8_mlh54")

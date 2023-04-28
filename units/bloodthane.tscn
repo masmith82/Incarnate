@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://gr6wsoitm41a"]
 
-[ext_resource type="PackedScene" uid="uid://j8sax34ndffw" path="res://actor.tscn" id="1_04foe"]
+[ext_resource type="PackedScene" uid="uid://b2c0hh1ie4ib6" path="res://actor.tscn" id="1_04foe"]
 [ext_resource type="Script" path="res://units/bloodthane.gd" id="2_ieban"]
 
 [node name="bloodthane" groups=["bloodthane"] instance=ExtResource("1_04foe")]
 script = ExtResource("2_ieban")
 max_health = 12
-movement = 4
+base_movement = 4

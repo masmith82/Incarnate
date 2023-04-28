@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cnt2cx5i4pbue"]
 
-[ext_resource type="PackedScene" uid="uid://j8sax34ndffw" path="res://actor.tscn" id="1_6gdkq"]
+[ext_resource type="PackedScene" uid="uid://b2c0hh1ie4ib6" path="res://actor.tscn" id="1_6gdkq"]
 [ext_resource type="Script" path="res://units/traceless.gd" id="2_cfyff"]
 [ext_resource type="Texture2D" uid="uid://y0sm67k8bxnc" path="res://GFX/Temp/traceless_sheet.png" id="3_aoqs3"]
 
@@ -39,9 +39,10 @@ animations = [{
 [node name="traceless" groups=["traceless"] instance=ExtResource("1_6gdkq")]
 script = ExtResource("2_cfyff")
 max_health = 10
-movement = 4
+base_movement = 4
 
 [node name="sprite_ph" parent="actor_core" index="0"]
 scale = Vector2(1.005, 1)
 sprite_frames = SubResource("SpriteFrames_ag3pr")
-frame_progress = 0.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]

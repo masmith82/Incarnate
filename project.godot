@@ -13,7 +13,6 @@ config_version=5
 config/name="Bfta4.0"
 run/main_scene="res://level.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
-config/icon="res://icon.svg"
 
 [autoload]
 
@@ -22,7 +21,9 @@ Global="*res://global.gd"
 [display]
 
 window/size/viewport_width=1280
-window/size/viewport_height=800
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
 window/stretch/mode="viewport"
 
 [gui]
@@ -36,3 +37,7 @@ left_click={
 "events": [null, Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(182, 16),"global_position":Vector2(186, 59),"factor":1.0,"button_index":1,"pressed":true,"double_click":false,"script":null)
 ]
 }
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Chimeric_Cloak" load_steps=3 format=3 uid="uid://b2il1nds6bkx5"]
+
+[ext_resource type="Texture2D" uid="uid://bmedp2xy0afqg" path="res://GFX/Units/Traceless/chimeric_cloak.png" id="1_psd78"]
+[ext_resource type="Script" path="res://skills/Traceless/chimeric_cloak.gd" id="2_iyuvg"]
+
+[resource]
+script = ExtResource("2_iyuvg")
+name = "Chimeric Cloak"
+icon = ExtResource("1_psd78")
+cd = 3
+tt = "The next strike against you this turn deals half damage. If less than 3 damage is prevented, prepare Chimeric Cloak."

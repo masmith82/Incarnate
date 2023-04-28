@@ -1,4 +1,12 @@
 extends Node2D
+class_name Actor
+
+#======================
+# CLASS: Actor
+# Base class controller for individual units. Player and NPC units inherit from this. Includes logic for
+# initializing UI elements, basic stats, start/end of turn upkeep, signals, taking and dealing damage,
+# adding and removing buffs.
+#======================
 
 #====================#
 # INSTANCE VARIABLES
@@ -6,7 +14,7 @@ extends Node2D
 
 # skill info
 @export var skill_data = Resource
-var sk
+
 var skill_loadout = []
 
 # enums for handling skill types and action points
@@ -14,9 +22,10 @@ enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
 enum {ANY, NO_SKILL, NO_MOVE, SPENT}
 
 # basic info variables
-@export var max_health : int = 0
-@export var movement : int = 0
-var health
+@export var max_health : int
+@export var base_movement : int
+var movement : int
+var health: int
 
 var cooldowns = {}
 const default_action_pool = {
@@ -28,23 +37,36 @@ const default_action_pool = {
 var action_pool = default_action_pool.duplicate() 
 
 # pointers and misc setup
-@onready var g = get_node("/root/Global")
+
+var sk
 var buffs
 
-var ui_bar					# when the unit's UI builds itself, it attaches here
+var ui_bar = null			# when the unit's UI builds itself, it attaches here
 var group_name : String		# stores each individual unit's group name, which is used to refer to that unit's UI elements
+
+var scaled_damage_taken_mods = []
+var scaled_damage_dealt_mods = []
 
 
 #=========#
 # SIGNALS #
 #=========#
+signal action_finished
 signal dealt_damage		# tells the game controller and other units that this unit dealt damage
 signal took_damage		# tells the game controller and other units that this unit took damage
 signal healed_damage	# tells the game controller and other units that this unit healed damage
+signal can_react
+signal resolve_ready
+signal reacted
+signal animation_finished
+
 signal shifted
 signal moved
+
 signal special_popup_confirm	# confirms a special popup action has been finished
 signal queued_action_finished
+signal send_target
+
 #=================#
 # STATE VARIABLES
 # These frequently updated variables that inform where the unit is on the map
@@ -52,8 +74,9 @@ signal queued_action_finished
 #=================#
 
 var actions = ANY
-var astar_pos = Vector2i(0,0)
-var origin_tile = Area2D
+var astar_pos: Vector2i
+var origin_tile:  Area2D
+var states
 
 #=====================#
 # UNIT INITIALIZATION #
@@ -69,10 +92,13 @@ var origin_tile = Area2D
 
 func setup_unit():
 	buffs = $buff_list
+	health = max_health
+	movement = base_movement
+
 	default_action_pool.make_read_only()
 	init_cooldowns()
-	g.camera.create_ui(self)
-	g.start_turn.connect(Callable(self, "start_turn_upkeep"))
+	Global.camera.create_ui(self)
+	Global.start_turn.connect(Callable(self, "start_turn_upkeep"))
 	init_passive()
 
 #=================#
@@ -96,29 +122,6 @@ func init_cooldowns():
 			var n = skill.name
 			cooldowns[n] = 0
 
-#=================#
-# FUNCTION: set_player_actor
-# In forms the game controller singleton that this unit is the current actor,
-# gets it's position and changes the selection state and displays the unit's UI
-# !!! this could probably just be handled from global?
-#=================#
-
-func set_player_actor():
-	if g.current_actor:
-		g.deselect()		# if we have an actor selected, deselect it
-	get_unit_pos()
-	g.set_select_state(g.PLAYER_SELECT)
-	g.current_actor = self
-	ui_bar.update_ui()
-	ui_bar.show()
-
-#=================#
-# FUNCTION: hide_ui
-# Hide's the unit's UI bar
-#=================#
-
-func hide_ui():
-	ui_bar.hide()
 
 #=================#
 # FUNCTION: action_handler
@@ -143,16 +146,30 @@ func action_handler():
 #=================#
 
 func finish_action(act_type):
+	await get_tree().create_timer(.1).timeout
+	
+	get_tree().call_group(group_name, "set_button_state")
+
+	Global.reset_nav()
+	deduct_action(act_type)
+	
+	states.set_unit_state("actor_finished")
+
+	emit_signal("send_target", null)	# failsafe to clear targets. feels like this shouldn't work?
+
+
+
+
+func deduct_action(act_type):
 	if act_type == "free":
-		g.post_action_cleanup(self)
 		return
 	if action_pool[act_type] > 0:
 		action_pool[act_type] -= 1
 	else:
 		action_pool["flex"] -= 1
 	action_handler()
-	await get_tree().create_timer(.1).timeout
-	g.post_action_cleanup(self)
+	get_tree().call_group(group_name, "update_actions_ui")
+	get_tree().call_group(group_name, "set_button_state")
 
 #=================#
 # FUNCTION: start_turn_upkeep
@@ -166,7 +183,6 @@ func start_turn_upkeep():
 		action_pool[k] = default_action_pool[k]
 	for cd in cooldowns:
 		if cooldowns[cd] > 0: cooldowns[cd] -= 1
-		get_tree().call_group(group_name, "set_button_state")
 	action_handler()
 	get_tree().call_group(group_name, "update_actions_ui")
 	get_tree().call_group(group_name, "set_button_state")
@@ -179,10 +195,9 @@ func start_turn_upkeep():
 #=================#
 
 func end_turn():
-	g.reset_nav()
+	Global.reset_nav()
 	get_unit_pos()
-	g.selection = g.NO_SELECTION
-	g.end_player_turn()
+	Global.end_player_turn()
 
 #=================#
 # FUNCTION: get_unit_pos
@@ -196,10 +211,29 @@ func get_unit_pos():
 		astar_pos = a[0].astar_index
 		origin_tile = a[0]
 		origin_tile.occupied = true		# this might be a problem with shifting?
+		print(name, " getting unit position...")
 
 func deal_damage(target : Node2D, damage : int):
-	# insert conditionals here
+	states.set_unit_state("actor_attacking", {"target": target})
+	target.states.set_unit_state("actor_under_attack", {"source": self})
+	await self.resolve_ready
 	target.take_damage(self, damage)
+
+#=================#
+# FUNCTION: scaled_damage_taken_reduction:
+# Helper function that averages all % based damage reduction in damage_taken_mods 
+#=================#
+
+func scaled_damage_taken_reduction(damage):
+	print("Reducing damage ", scaled_damage_taken_mods)
+	var total = 0
+	if scaled_damage_taken_mods.size() > 0:
+		for n in scaled_damage_taken_mods:
+			total += n
+		print("Damage reduced by : ", total, " on ", self.name)
+		var modified_damage = (damage * (total / scaled_damage_taken_mods.size()))
+		return floor(modified_damage)
+	return damage
 
 #=================#
 # FUNCTION: take_damage
@@ -208,10 +242,23 @@ func deal_damage(target : Node2D, damage : int):
 #=================#
 
 func take_damage(source : Node2D, damage : int):
-	health = health - damage
-	source.i_dealt_damage(self, damage)
-	combat_text(damage)
+	var damage_modified = scaled_damage_taken_reduction(damage)
+	health = health - damage_modified
+	combat_text(damage_modified)
 	get_tree().call_group(group_name, "update_health_bar")
+	emit_signal("took_damage")
+	source.i_dealt_damage(self, damage_modified)
+	incoming_resolved()
+
+func incoming_resolved():
+	if !states.actor_state:
+		print("Actor may be in an invalid state?")
+	if Global.current_actor == self:
+		return
+	if states.actor_state == states.get_node("actor_idle"):
+		return
+	states.set_unit_state("actor_finished")
+
 
 #=================#
 # FUNCTION: heal_damage
@@ -224,8 +271,11 @@ func heal_damage(source : Node2D, healing : int):
 		var overheal = healing - (max_health - health)		# overhealing will probably do something at some point
 	else:
 		health += healing
-	get_tree().call_group(group_name, "update_health_bar")
+		combat_text(healing, Color.GREEN)
 
+	get_tree().call_group(group_name, "update_health_bar")
+	incoming_resolved()
+	
 # when a unit takes damage, it calls this method to confirm with it's attacker if the attack was successful
 # and thus trigger on hits and that sort of thing
 
@@ -236,6 +286,7 @@ func heal_damage(source : Node2D, healing : int):
 #=================#
 
 func i_dealt_damage(target: Node2D, damage : int):
+	await self.action_finished
 	emit_signal("dealt_damage", target, damage)
 
 #=================#
@@ -243,13 +294,12 @@ func i_dealt_damage(target: Node2D, damage : int):
 # Displays floating combat text when damage is dealt
 #=================#
 
-func combat_text(damage):
-	var tween = create_tween()
-	$local_text/combat_text.text = (str(damage))
-	tween.tween_property($local_text/combat_text, "position", $local_text/combat_text.position + Vector2(50,-50), 1)
-	await tween.finished
-	$local_text/combat_text.text = ""
-	$local_text/combat_text.position = Vector2(0,0)
+func combat_text(to_display, color: Color = Color.WHITE_SMOKE):
+	var t = preload("res://UI/combat_text.tscn")
+	var combat_text = t.instantiate()
+	$local_text.add_child(combat_text)
+	combat_text.setup(to_display, color)
+
 
 #=================#
 # FUNCTION: add_buff
@@ -267,14 +317,6 @@ func add_buff(buffname):
 
 func remove_buff(buffname):
 	$buff_list.remove_child(buffname)
+	buffname.ui_icon.queue_free()
 	ui_bar.update_buff_bar()
-
-func suppress_collision():
-	await get_tree().create_timer(.1).timeout
-	get_unit_pos()
-	g.level.astar.set_point_solid(astar_pos, false)
-
-func unsuppress_collision():
-	await get_tree().create_timer(.1).timeout
-	get_unit_pos()
-	g.level.astar.set_point_solid(astar_pos, true)
+	buffname.queue_free()

@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=3 uid="uid://drcm6b3bk71rk"]
+
+[ext_resource type="Script" path="res://UI/trigger_confirm.gd" id="1_25gyx"]
+[ext_resource type="Texture2D" uid="uid://caqlp6sufq4gp" path="res://GFX/Generic Icons/blank_square.png" id="2_r3d3s"]
+
+[node name="trigger_confirm" type="PopupPanel"]
+process_mode = 3
+title = "Reaction"
+size = Vector2i(400, 322)
+visible = true
+always_on_top = true
+min_size = Vector2i(400, 200)
+max_size = Vector2i(1000, 500)
+script = ExtResource("1_25gyx")
+
+[node name="main_container" type="VBoxContainer" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 396.0
+offset_bottom = 318.0
+theme_override_constants/separation = 16
+
+[node name="trigger_label" type="Label" parent="main_container"]
+layout_mode = 2
+text = "Something triggered a reaction!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="mid_container" type="HSplitContainer" parent="main_container"]
+layout_mode = 2
+
+[node name="effect_icon" type="TextureRect" parent="main_container/mid_container"]
+layout_mode = 2
+texture = ExtResource("2_r3d3s")
+
+[node name="effect_label" type="Label" parent="main_container/mid_container"]
+layout_mode = 2
+text = "Hello here's some text. Text text text text."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="button_container" type="HFlowContainer" parent="main_container"]
+layout_mode = 2
+alignment = 1
+
+[node name="base_button" type="TextureButton" parent="main_container/button_container"]
+visible = false
+layout_mode = 2
+texture_normal = ExtResource("2_r3d3s")

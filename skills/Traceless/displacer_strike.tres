@@ -1,6 +1,23 @@
-[gd_resource type="Resource" script_class="Displacer_Strike" load_steps=2 format=3 uid="uid://bfwudpsqbf0va"]
+[gd_resource type="Resource" script_class="Displacer_Strike" load_steps=4 format=3 uid="uid://bfwudpsqbf0va"]
 
+[ext_resource type="PackedScene" path="res://Effects/blued_attack.tscn" id="1_3moaq"]
 [ext_resource type="Script" path="res://skills/Traceless/displacer_strike.gd" id="1_by6et"]
+[ext_resource type="Texture2D" uid="uid://b0nakgpqvv0hj" path="res://GFX/Units/Traceless/displacer_strike.png" id="2_l8k5b"]
 
 [resource]
 script = ExtResource("1_by6et")
+fx = ExtResource("1_3moaq")
+name = "Displacer Strike"
+icon = ExtResource("2_l8k5b")
+cd = 0
+tt = "Shift 2 squares, then strike an enemy for 3 damage."
+base_damage = 4
+target_info = {
+"color": 1,
+"disjointed": [{
+"color": 0,
+"disjointed": [],
+"target": 0
+}],
+"target": 2
+}

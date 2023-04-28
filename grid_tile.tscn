@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://cx5i35k8e5jlr"]
+[gd_scene load_steps=9 format=3 uid="uid://cx5i35k8e5jlr"]
 
 [ext_resource type="Script" path="res://grid_tile.gd" id="1_t6fvx"]
 [ext_resource type="Texture2D" uid="uid://h1g76wkw2hd6" path="res://GFX/UI/grid.png" id="1_ydymj"]
 [ext_resource type="Texture2D" uid="uid://cnalky6u87apy" path="res://GFX/UI/GridCyan.png" id="3_sf772"]
 [ext_resource type="Texture2D" uid="uid://b0uei8o1e25s2" path="res://GFX/UI/GridRed.png" id="4_bmvuc"]
 [ext_resource type="Texture2D" uid="uid://bon6fh2liltdy" path="res://GFX/UI/GridGreen.png" id="5_ixk2k"]
+[ext_resource type="Texture2D" uid="uid://c3jpxgvp3lw0b" path="res://GFX/UI/GridLight.png" id="6_b6asj"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_c6cqs"]
 animations = [{
@@ -20,6 +21,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("5_ixk2k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_b6asj")
 }],
 "loop": true,
 "name": &"default",
@@ -43,6 +47,15 @@ offset_left = -25.0
 offset_top = 10.0
 offset_right = 25.0
 offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true
+
+[node name="grid_text" type="Label" parent="."]
+offset_left = 19.0
+offset_top = -34.0
+offset_right = 69.0
+offset_bottom = -8.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
 metadata/_edit_use_anchors_ = true
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

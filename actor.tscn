@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://j8sax34ndffw"]
+[gd_scene load_steps=10 format=3 uid="uid://b2c0hh1ie4ib6"]
 
 [ext_resource type="Script" path="res://actor.gd" id="1_u4scy"]
 [ext_resource type="Texture2D" uid="uid://ktox0tq85wt7" path="res://GFX/Units/Bloodthane/bt_spritesheet_scaled.png" id="2_fg2nb"]
+[ext_resource type="PackedScene" uid="uid://cv6on2v6cyfet" path="res://UI/combat_text.tscn" id="3_0kkj6"]
+[ext_resource type="PackedScene" uid="uid://cnuxje16d2cj6" path="res://core/actor_states/actor_state_machine.tscn" id="3_n1gdf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rmpcr"]
 atlas = ExtResource("2_fg2nb")
@@ -48,7 +50,6 @@ script = ExtResource("1_u4scy")
 scale = Vector2(0.2, 0.199)
 sprite_frames = SubResource("SpriteFrames_5uc26")
 autoplay = "default"
-frame_progress = 0.414084
 
 [node name="actor_area" type="Area2D" parent="actor_core"]
 z_index = 1
@@ -65,7 +66,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 2
 
-[node name="combat_text" type="Label" parent="local_text"]
+[node name="combat_text" parent="local_text" instance=ExtResource("3_0kkj6")]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+
+[node name="actor_state_machine" parent="." instance=ExtResource("3_n1gdf")]

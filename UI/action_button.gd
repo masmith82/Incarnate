@@ -1,4 +1,5 @@
 extends TextureButton
+class_name Action_Button
 
 #======================
 # CLASS: ACTION_BUTTON
@@ -19,7 +20,6 @@ enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
 enum {LOCKED, UNLOCKED}
 
 func set_button_detail(linked_unit):
-	g = get_node("/root/Global")
 	unit = linked_unit
 	index = self.get_index()
 	skill = unit.skill_loadout[index + 1]
@@ -41,13 +41,14 @@ func link_verbose_tt():
 	
 func execute_skill():
 	new_action()
-	skill.execute(unit)	
+	skill.execute(unit)
 	lock_actions()
 
 func new_action():
-	g.reset_nav()
+	Global.reset_nav()
 	unit.get_unit_pos()
-	g.set_select_state(g.PLAYER_ACTION)
+	print(skill.name)
+	Global.s.change_selection_state("player_target", skill.target_info.duplicate(true))
 
 func lock_actions():
 	get_tree().call_group(unit.group_name, "set_button_state")
@@ -55,8 +56,7 @@ func lock_actions():
 func check_button_lock_state():
 	if skill == null:
 		return
-	if g.targeting != g.NO_TARGET:
-		print("locked target")
+	if Global.s.game_state == Global.s.get_node("player_target") or Global.s.game_state == Global.s.get_node("handle_popup"):
 		return LOCKED
 	if unit.cooldowns[skill.name] > 0:
 		print("locked cd")

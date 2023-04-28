@@ -1,5 +1,5 @@
 ########################
-# CLASS: skill_lib
+# CLASS: Skills_Library
 # Contains basic targeting methods for a variety of attacks and skills
 # These skills take a callable from class_skills and set up targeting, while
 # logic from the map/level handles target validation and confirms skill execution
@@ -10,12 +10,14 @@
 extends Resource
 class_name Skills_Library
 
-enum {NO_SELECTION, PLAYER_SELECT, PLAYER_ACTION, NPC_SELECTION, ENEMY_TURN, UPKEEP, LOCKED}
-enum {NO_TARGET, PLAYER_MOVE, PLAYER_ATTACK, PLAYER_HELP, SPECIAL}
 enum {PASS, MOVE, BASIC, HEAVY, AREA, DEF, MNVR, UTIL, ULT}
 enum {RECHARGE, RESET}
+enum {ATTACK_TARGET, MOVE_TARGET, AID_TARGET, SPECIAL_TARGET}
+enum {NEEDS_ENEMY, NEEDS_ALLY, NEEDS_OPEN, NEEDS_ANY, NEEDS_UNIT}
 
-var g	# placeholder for calling Global singleton
+var g
+var effect_info
+
 var popup = load("res://UI/popup_ui.tscn")
 
 ############################
@@ -43,11 +45,11 @@ class skill_template extends Skills_Library:
 	@export var tt: String
 	var type = BASIC
 	
-	func execute(unit):
+	func _execute(unit):
 		var origin = unit.origin_tile
-		if !action_check(unit, name, PLAYER_ATTACK): return
+		if !action_check(unit, name): return
 		target_basic(origin, 1)
-		var target = await g.level.send_target
+		var target = await unit.send_target
 		if !target: return
 		var t = target.get_unit_on_tile()
 		if t: pass # do stuff here
@@ -64,17 +66,14 @@ class skill_template extends Skills_Library:
 
 func call_up(group : StringName, method : StringName, args = null):
 	g = Engine.get_singleton("Global")
-	g.get_tree().call_group(group, method, args)
-
-func set_targ_state(state : int):
-	call_up("control", "set_target_state", state)
+	Global.get_tree().call_group(group, method, args)
 	
-func set_select_state(state : int):
-	call_up("control", "set_select_state", state)
+func change_selection_state(state):
+	call_up("control", "change_selection_state", state)
 
 func reset_nav():
 	g = Engine.get_singleton("Global")
-	g.reset_nav()
+	Global.reset_nav()
 
 ############################
 # ACTION POINT CHECKERS:
@@ -84,26 +83,20 @@ func reset_nav():
 
 # !!! going to probably need to rewrite this, it's causing a lot of hiccups
 
-func action_check(unit, name, targeting):
+func action_check(unit, name):
 	if unit is Traceless_Shadow:
-		set_targ_state(targeting)
-		set_select_state(PLAYER_ACTION)
 		return true
 	if unit.actions == unit.NO_SKILL or unit.actions == unit.SPENT:
 		return false
 	if unit.cooldowns[name] > 0:
 		print("On cooldown!")
 		return false
-	else:
-		set_targ_state(targeting)
-		return true
+	return true
 		
 func move_check(unit):
 	if unit.actions == unit.NO_MOVE or unit.actions == unit.SPENT:
 		return false
-	else:
-		set_targ_state(PLAYER_MOVE)
-		return true
+	return true
 
 ############################
 # BASIC TARGETING:
@@ -145,7 +138,7 @@ func target_basic(origin : Area2D, distance : int, target_over_obstacles : bool 
 
 		neighbor.set_highlight()				# highlights everything within range by default
 		neighbor.valid_selection = true
-		
+
 		if distance > 0:
 			target_basic(neighbor, (distance - 1), target_over_obstacles)
 			
@@ -154,21 +147,20 @@ func target_self(origin: Area2D):
 	origin.set_highlight()
 
 ############################
-# BASIC ACTIONS:
+# BASIC MOVEMENT:
 # Basic logic for different types of movement such as regular move, shift, fly, etc.
 ############################
 
 func basic_move(unit : Node2D, origin : Area2D, movement : int, path : Array = [], is_move : bool = true):
-	g = Engine.get_singleton("Global")
 	if path.size() <= 0:
 		pathfind_basic(origin, movement)
-		var target = await g.level.send_target
+		var target = await unit.send_target
 		if !target: return
-		path = g.level.astar.get_id_path(origin.astar_index, target.astar_index)
+		path = Global.level.astar.get_id_path(origin.astar_index, target.astar_index)
 	var waypoint
-	var tween = g.create_tween()
+	var tween = Global.create_tween()
 	for point in path:
-		waypoint = g.level.astar_to_tile[point].position
+		waypoint = Global.level.astar_to_tile[point].position
 		tween.tween_property(unit, "position", waypoint, .1)
 	await tween.finished
 	if is_move:								# flag if this is a move action, defaults to yes
@@ -177,33 +169,33 @@ func basic_move(unit : Node2D, origin : Area2D, movement : int, path : Array = [
 	return
 	
 func basic_shift(unit : Node2D, origin : Area2D, movement : int, path : Array = [], is_move : bool = false):
-	g = Engine.get_singleton("Global")
-	g.suppress_collision()
+	Global.suppress_collision()
 	if path.size() <= 0:					# if a path is passed in (as in Bloody Rush) use that instead
 		pathfind_shift(origin, movement)	# otherwise gets path from astar
-		var target = await g.level.send_target
+		var target = await unit.send_target
 		if !target: return
-		path = g.level.astar.get_id_path(origin.astar_index, target.astar_index)
+		path = Global.level.astar.get_id_path(origin.astar_index, target.astar_index)
 	var waypoint
-	var tween = g.create_tween()
+	var tween = Global.create_tween()
 	for point in path:
-		waypoint = g.level.astar_to_tile[point].position
-		tween.set_trans(Tween.TRANS_BACK)
+		waypoint = Global.level.astar_to_tile[point].position
+		tween.set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(unit, "position", waypoint, .1)
 	await tween.finished
-	await resolve_shift(path.back(), path)
-	g.unsuppress_collision()
+	resolve_shift(path.back(), path)
+	Global.unsuppress_collision()
 	if is_move:							# flag if this is replacing a default move
 		unit.finish_action("move")		# otherwise assumes it's attached to a skill
 	path.clear()
 	unit.emit_signal("shifted", origin)
+	unit.emit_signal("animation_finished")
 
 func resolve_shift(target : Vector2i, path : Array):
 	# !!! currently the shift logic allows units to shift through but not into other unit's spaces
 	# !!! that may be good enough honestly!
-	var tile = g.level.astar_to_tile[target]
+	var tile = Global.level.astar_to_tile[target]
 	if tile.get_overlapping_areas().size() > 1:
-		print("conflict")
+		print("shift conflict")
 		pass
 
 func basic_pull(unit: Node2D, origin: Area2D, movement : int, path : Array = []):
@@ -212,12 +204,12 @@ func basic_pull(unit: Node2D, origin: Area2D, movement : int, path : Array = [])
 	# astar pathfinding has weird issues with obstacles when moving enemies...
 	# ok I know why, player is prevented from moving onto enemy tile... whoops did I fix this or not? lol
 	# !!! needs various tweaks to fine tune
-	g.level.astar.set_point_solid(origin.astar_index, false)
-	path = g.level.astar.get_id_path(unit.origin_tile.astar_index, origin.astar_index)
-	g.level.astar.set_point_solid(origin.astar_index, true)
+	Global.level.astar.set_point_solid(origin.astar_index, false)
+	path = Global.level.astar.get_id_path(unit.origin_tile.astar_index, origin.astar_index)
+	Global.level.astar.set_point_solid(origin.astar_index, true)
 	path = prune_ai_path(origin, movement, path)
-	await basic_move(unit, origin, movement, path, false)				# call a regular move, flagged
-	await g.get_tree().create_timer(.1).timeout
+	if path: await basic_move(unit, origin, movement, path, false)				# call a regular move, flagged
+	await Global.get_tree().create_timer(.1).timeout
 	unit.get_unit_pos()													# confirm targets new position
 
 func prune_ai_path(origin : Area2D, movement : int, path : Array):
@@ -227,42 +219,39 @@ func prune_ai_path(origin : Area2D, movement : int, path : Array):
 	path = path.filter(func(coords): return coords != Vector2i(0,0))		# remove invalid entries so we don't crash
 	return path
 
-#============================#
-# BASIC BUFF/DEBUFF HANDLING #
-#============================#
+#==================#
+# BASIC ANIMATIONS #
+#==================#
 
-class buff extends Node:
-	var duration
-	var unit
-	var stacks
-	@export var icon = preload("res://GFX/Generic Icons/blank_square.png")	
-	var callable = Callable(self, "buff_stuff")
+func melee_attack_anim(unit: Node2D, origin: Area2D, target: Area2D, fx: PackedScene):
+	var tween = Global.create_tween()
+	tween.tween_property(unit, "position", target.position, .1)
+	target.add_child(fx.instantiate())
+	tween.tween_property(unit, "position", origin.position, .1)
+	await tween.finished
 	
-	func _ready():
-		unit = get_parent().get_parent()
-		var g = Engine.get_singleton("Global")
-		g.start_turn.connect(callable)
+#===================#
+# REACTION POPUPS + #
+# TRIGGER MANAGER   #
+#===================#	
 
-	func buff_tick():
-		if duration:
-			duration -= 1
-			print(name, ": ", duration, "turns remaining.")
-			if duration <= 0:
-				self.queue_free()
+func confirmation_popup(unit, effect_info, multi: bool = false):
+	var p = null
+	if multi == true: p = preload("res://UI/trigger_confirm_multi.tscn")	# if called with multi flag,
+	else: p = preload("res://UI/trigger_confirm.tscn")						# uses multi_button format
+	var popup = p.instantiate()
 	
-	func buff_stuff():
-		# to be overridden by each buff's "stuff"
-		pass
+	popup.caller = unit
+	popup.setup(effect_info["trigger"], effect_info["icon"], effect_info["effect"])
+	unit.ui_bar.add_child(popup)
+	popup.show()
+	unit.get_tree().paused = true
+	return popup
 
-#============================#
-# UNIVERSAL BUFFS/DEBUFFS	 #
-#============================#
+func set_triggers(unit: Actor, target: Actor):
+	unit.add_to_group("has_triggers")
+	unit.add_to_group("has_triggers")
 
-class debuff_blind extends buff:
-	
-	func _init():
-		name = "Blind"
-	
-	func _ready():
-		unit = get_parent().get_parent()
-		print(unit.name, " was blinded!")
+func clear_triggers(unit: Actor, target: Actor):
+	unit.remove_from_group("has_triggers")
+	unit.remove_from_group("has_triggers")

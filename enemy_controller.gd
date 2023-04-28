@@ -1,16 +1,11 @@
 extends Node
 
-@onready var g = get_node("/root/Global")
-
-func _ready():
-	pass # Replace with function body.
-
-func _process(delta):
-	pass
-
 func start_enemy_turn():
 	for enemy in get_children():
 		if enemy:
-			await enemy.set_enemy_actor()
-			await enemy.get_target()
-	g.end_enemy_turn()
+			enemy.set_enemy_actor()
+			enemy.get_target()
+			await enemy.action_finished
+			await get_tree().create_timer(.5).timeout
+			
+	Global.end_enemy_turn()

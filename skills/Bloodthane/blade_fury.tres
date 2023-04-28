@@ -1,13 +1,19 @@
-[gd_resource type="Resource" script_class="Blade_Fury" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="Blade_Fury" load_steps=4 format=3 uid="uid://ct6pja55ffb8r"]
 
-[ext_resource type="PackedScene" uid="uid://bhx8f4of2w4ts" path="res://Effects/blood_attack.tscn" id="1_887pl"]
+[ext_resource type="PackedScene" uid="uid://bsfkl3wdke28l" path="res://Effects/blood_attack.tscn" id="1_887pl"]
 [ext_resource type="Script" path="res://skills/Bloodthane/blade_fury.gd" id="1_p1l5x"]
-[ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Units/Bloodthane/Icons/1 Blade FurySmall.png" id="2_qmt2k"]
+[ext_resource type="Texture2D" uid="uid://bveu6pgstiqpm" path="res://GFX/Units/Bloodthane/Icons/1 Blade FurySmall.png" id="2_0exd2"]
 
 [resource]
 script = ExtResource("1_p1l5x")
 fx = ExtResource("1_887pl")
 name = "Blade Fury"
-icon = ExtResource("2_qmt2k")
+icon = ExtResource("2_0exd2")
 cd = 0
 tt = "Attack a target in melee range for 4 damage."
+base_damage = 4
+target_info = {
+"color": 0,
+"disjointed": [],
+"target": 0
+}

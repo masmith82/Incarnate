@@ -1,4 +1,12 @@
 extends Control
+class_name Popup_UI
+
+#======================
+# CLASS: Popup_UI
+# Creates popup buttons dynamically for triggered effects. This version just creates buttons and does not
+# pause the game. Some of this functionality will be moved to the Trigger_Confirm popup window class, but
+# this version still may be needed.
+#======================
 
 @onready var g = get_node("/root/Global")
 
@@ -20,14 +28,15 @@ func _ready():
 	
 func setup_skill_popup(effect_type):
 	for s in skills:
+		if s == null: continue
 		var name = s["name"]
 		if cd[name] > 0:		# s gives us the full skill, s["name"] gives us skill's name, cd[~] should give us cd of skill
 			var new_button = base_button.duplicate(0)
-			new_button.texture_normal = load(s["icon"])
+			new_button.texture_normal = s["icon"]
 			$popup_container.add_child(new_button)
-			await setup_button(new_button, s, effect_type)
-			g.set_select_state(g.POPUP_LOCKED)
-			unit.ui_bar.lock_actions()
+			setup_button(new_button, s, effect_type)
+			Global.s.change_selection_state("handle_popup")
+			get_tree().call_group(Global.current_actor.group_name, "set_button_state")
 
 func setup_button(new_button, skill, effect_type = null):
 	var c = Callable(self, "popup_effect")
@@ -39,9 +48,9 @@ func setup_special_popup(popup_options : Array, target : Node2D):
 		var new_button = base_button.duplicate(0)
 		new_button.texture_normal = load(p["icon"])
 		$popup_container.add_child(new_button)
-		await setup_special_button(new_button, p["pact"], target)
+		setup_special_button(new_button, p["pact"], target)
 		new_button.show()
-	g.set_select_state(g.POPUP_LOCKED)
+	Global.s.change_selection_state("handle_popup")
 	get_tree().call_group(unit.group_name, "set_button_state")
 	await unit.special_popup_confirm
 	print("popup_finished")
@@ -62,8 +71,7 @@ func popup_effect(skill, effect_type):
 	
 func popup_cleanup():
 	get_tree().call_group(unit.group_name, "set_button_state")
-	g.set_select_state(g.PLAYER_SELECT)
-	g.set_target_state(g.NO_TARGET)
+	Global.s.change_selection_state("player_select")
 	queue_free()
 
 func _on_popup_base_button_pressed():

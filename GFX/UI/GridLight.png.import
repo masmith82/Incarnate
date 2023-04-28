@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsu6rnsqydlgq"
-path="res://.godot/imported/WhiteBox.png-e31972c120735fd90f906e79c21bac9a.ctex"
+uid="uid://c3jpxgvp3lw0b"
+path="res://.godot/imported/GridLight.png-db761dd0bf93cc65d653fd3981f9db5f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://GFX/WhiteBox.png"
-dest_files=["res://.godot/imported/WhiteBox.png-e31972c120735fd90f906e79c21bac9a.ctex"]
+source_file="res://GFX/UI/GridLight.png"
+dest_files=["res://.godot/imported/GridLight.png-db761dd0bf93cc65d653fd3981f9db5f.ctex"]
 
 [params]
 

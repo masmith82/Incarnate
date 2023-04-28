@@ -18,4 +18,16 @@
 - queueing system needs more work as right now it can only copy the last action done. That's probably but
 	need to make sure that buttons are being replaced and not overwritten
 - also some weirdness with signals connecting to queued_cleanup, may be related
-- fix mirage shift so you can't teleport into obstacles
+
+!!!
+- finish Chimeric Cloak, finish working up system for damage boosting/reduction
+
+!!!
+- use casting "as" for good Intellisense stuff
+- try using "owner" for various things instead of getting parent... probably not super useful with all the instancing
+- Animation players for units... probably not worth it... just stick to tweens and anim sprites
+- can we use lerp for anything?
+- Learn... shaders?
+- Implement more composition!
+- CTRL-D to replace variable names
+- hey "is_instance_valid" is useful...

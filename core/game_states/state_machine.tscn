@@ -1,0 +1,30 @@
+[gd_scene load_steps=8 format=3 uid="uid://ddhdlmxwdcwhx"]
+
+[ext_resource type="Script" path="res://core/game_states/state_machine.gd" id="1_r5gkt"]
+[ext_resource type="Script" path="res://core/game_states/no_selection.gd" id="2_o7xjb"]
+[ext_resource type="Script" path="res://core/game_states/enemy_turn.gd" id="3_w4cnl"]
+[ext_resource type="Script" path="res://core/game_states/player_unit_select.gd" id="4_ia0p8"]
+[ext_resource type="Script" path="res://core/game_states/npc_select.gd" id="5_ahnwx"]
+[ext_resource type="Script" path="res://core/game_states/player_target.gd" id="5_q6d4f"]
+[ext_resource type="Script" path="res://core/game_states/handle_popup.gd" id="6_0ywgs"]
+
+[node name="state_machine" type="Node" groups=["control"]]
+script = ExtResource("1_r5gkt")
+
+[node name="no_selection" type="Node" parent="."]
+script = ExtResource("2_o7xjb")
+
+[node name="enemy_turn" type="Node" parent="."]
+script = ExtResource("3_w4cnl")
+
+[node name="player_select" type="Node" parent="."]
+script = ExtResource("4_ia0p8")
+
+[node name="npc_select" type="Node" parent="."]
+script = ExtResource("5_ahnwx")
+
+[node name="player_target" type="Node" parent="."]
+script = ExtResource("5_q6d4f")
+
+[node name="handle_popup" type="Node" parent="."]
+script = ExtResource("6_0ywgs")

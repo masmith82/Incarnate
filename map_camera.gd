@@ -27,7 +27,10 @@ func create_ui(unit):
 	var new_ui = ui_bar.instantiate()
 	new_ui.unit = unit
 	add_child(new_ui)
-	new_ui.setup_ui(unit)
+	if unit.is_in_group("player_units"):
+		new_ui.setup_ui(unit)
+	else:
+		new_ui.setup_NPC_ui(unit)
 	print("Created UI for ", unit)
 
 #====================#

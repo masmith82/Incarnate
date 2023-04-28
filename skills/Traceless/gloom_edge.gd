@@ -9,19 +9,24 @@ class_name Gloom_Edge
 @export var tt: String = "Strike a foe in melee range for 8 damage. Shadows copying this strike inflict Blind on
 	foes they strike."
 @export var base_damage = 8
+@export var target_info =  {"target" : NEEDS_ENEMY,
+							"color" : ATTACK_TARGET,
+							"disjointed" :	[]
+							}
+
 var type = HEAVY
 
 func execute(unit):
 	var origin = unit.origin_tile
-	if !action_check(unit, name, PLAYER_ATTACK): return		# sets targeting to special if the action check passes
+	if !action_check(unit, name): return		# sets targeting to special if the action check passes
 	target_basic(origin, 1)
-	var target = await g.level.send_target
+	var target = await unit.send_target
 	if !target: return
 	var t = target.get_unit_on_tile()
 	if t: unit.deal_damage(t, base_damage)
 	
 	if unit is Traceless_Shadow:
-		t.add_buff(debuff_blind.new())
+		t.add_buff(Buff.debuff_blind.new())
 		await unit.finish_action("skill")
 		unit.shadow_cleanup()
 		return

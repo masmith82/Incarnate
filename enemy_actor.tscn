@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cxjlf4dvf5wm6"]
+[gd_scene load_steps=9 format=3 uid="uid://cxjlf4dvf5wm6"]
 
 [ext_resource type="Script" path="res://enemy_actor.gd" id="1_soiw3"]
 [ext_resource type="Texture2D" uid="uid://dlvbgr5ksaq15" path="res://GFX/Enemies/$MonsterA.png" id="2_lsgdi"]
+[ext_resource type="PackedScene" uid="uid://cnuxje16d2cj6" path="res://core/actor_states/actor_state_machine.tscn" id="3_tmtj6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xk8xy"]
 atlas = ExtResource("2_lsgdi")
@@ -38,10 +39,12 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ub5am"]
 size = Vector2(63, 63)
 
-[node name="enemy_actor" type="Node2D" node_paths=PackedStringArray("buff_list") groups=["enemy_units", "units"]]
+[node name="enemy_actor" type="Node2D" node_paths=PackedStringArray("buff_list") groups=["NPCs", "enemy_units", "units"]]
 position = Vector2(512, 512)
 script = ExtResource("1_soiw3")
 buff_list = NodePath("buff_list")
+max_health = 10
+base_movement = 4
 
 [node name="actor_core" type="Node2D" parent="."]
 
@@ -69,3 +72,5 @@ mouse_filter = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
+
+[node name="actor_state_machine" parent="." instance=ExtResource("3_tmtj6")]

@@ -1,0 +1,140 @@
+[gd_scene load_steps=21 format=3 uid="uid://bo4km3jk0wqvs"]
+
+[ext_resource type="Texture2D" uid="uid://bcxdcflbm23ih" path="res://GFX/Animations/blood_attack.png" id="1_dmu2f"]
+[ext_resource type="Script" path="res://Effects/basic_strike_fx.gd" id="2_8g8sg"]
+[ext_resource type="AudioStream" uid="uid://c66sub072yrcw" path="res://SFX/mixkit-metal-hit-woosh-1485.wav" id="3_epqw4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ydsxe"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1dhy"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cb7n"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1024, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sh78e"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1536, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h3hfq"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(0, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wj5sv"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(512, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hcnd"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1024, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nnf16"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1536, 512, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xnt6l"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(0, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3hued"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(512, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kea10"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1024, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_btf6k"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1536, 1024, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_er114"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(0, 1536, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eog5m"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(512, 1536, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wducr"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1024, 1536, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjyc6"]
+atlas = ExtResource("1_dmu2f")
+region = Rect2(1536, 1536, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iansc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ydsxe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1dhy")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_2cb7n")
+}, {
+"duration": 4.0,
+"texture": SubResource("AtlasTexture_sh78e")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_h3hfq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wj5sv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hcnd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nnf16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xnt6l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3hued")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kea10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_btf6k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_er114")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eog5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wducr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjyc6")
+}],
+"loop": false,
+"name": &"default",
+"speed": 30.0
+}]
+
+[node name="gfx" type="AnimatedSprite2D"]
+modulate = Color(0, 1, 25, 1)
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_iansc")
+autoplay = "default"
+frame = 15
+frame_progress = 1.0
+script = ExtResource("2_8g8sg")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_epqw4")
+autoplay = true
+
+[connection signal="animation_finished" from="." to="." method="_on_animation_finished"]

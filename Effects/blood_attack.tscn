@@ -1,7 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://bhx8f4of2w4ts"]
+[gd_scene load_steps=21 format=3 uid="uid://bsfkl3wdke28l"]
 
 [ext_resource type="Texture2D" uid="uid://bcxdcflbm23ih" path="res://GFX/Animations/blood_attack.png" id="1_4sot1"]
-[ext_resource type="Script" path="res://Effects/blood_attack.gd" id="2_v07it"]
+[ext_resource type="Script" path="res://Effects/basic_strike_fx.gd" id="2_jv2d0"]
 [ext_resource type="AudioStream" uid="uid://c66sub072yrcw" path="res://SFX/mixkit-metal-hit-woosh-1485.wav" id="3_16ts4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ydsxe"]
@@ -124,13 +124,13 @@ animations = [{
 "speed": 30.0
 }]
 
-[node name="blood_attack" type="AnimatedSprite2D"]
+[node name="gfx" type="AnimatedSprite2D"]
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_iansc")
 autoplay = "default"
 frame = 3
 frame_progress = 0.515568
-script = ExtResource("2_v07it")
+script = ExtResource("2_jv2d0")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_16ts4")

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dkf6nl00lv6oi"]
+[gd_scene load_steps=8 format=3 uid="uid://dkf6nl00lv6oi"]
 
 [ext_resource type="Texture2D" uid="uid://y0sm67k8bxnc" path="res://GFX/Temp/traceless_sheet.png" id="1_0inhm"]
 [ext_resource type="Script" path="res://units/traceless_shadow.gd" id="1_nxbsy"]
+[ext_resource type="PackedScene" uid="uid://cnuxje16d2cj6" path="res://core/actor_states/actor_state_machine.tscn" id="3_j4ix8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u1ypd"]
 atlas = ExtResource("1_0inhm")
@@ -35,10 +36,12 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="traceless_shadow" type="Node2D"]
+[node name="traceless_shadow" type="Node2D" groups=["temporary"]]
 script = ExtResource("1_nxbsy")
 
 [node name="sprite_ph" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.501961, 0.501961, 0.501961, 0.392157)
 sprite_frames = SubResource("SpriteFrames_vvnls")
 autoplay = "default"
+
+[node name="actor_state_machine" parent="." instance=ExtResource("3_j4ix8")]

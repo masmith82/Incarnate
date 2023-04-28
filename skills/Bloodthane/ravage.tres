@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Ravage" load_steps=4 format=3 uid="uid://k3v13sv55ktw"]
+
+[ext_resource type="PackedScene" uid="uid://bsfkl3wdke28l" path="res://Effects/blood_attack.tscn" id="1_c7go4"]
+[ext_resource type="Texture2D" uid="uid://ch6jvwkj8of33" path="res://GFX/Units/Bloodthane/Icons/5 Reaving Claws.png" id="2_8b5ce"]
+[ext_resource type="Script" path="res://skills/Bloodthane/ravage.gd" id="3_spvjo"]
+
+[resource]
+script = ExtResource("3_spvjo")
+fx = ExtResource("1_c7go4")
+name = "Ravage"
+icon = ExtResource("2_8b5ce")
+cd = 2
+tt = "Strike twice for 4 damage. Each strike can target a different foe."
+base_damage = 4
+target_info = {
+"color": 0,
+"disjointed": [{
+"color": 3,
+"disjointed": [],
+"target": 0
+}],
+"target": 0
+}

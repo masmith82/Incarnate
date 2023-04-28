@@ -9,6 +9,16 @@ class_name Bloody_Rush
 @export var cd: int = 3
 @export var tt: String = "Shift 3 squares, then deal 2 damage to each enemy in a square you passed through or passed adjacent to."
 @export var base_damage = 2
+var target_info =  {"target" : NEEDS_ANY,
+					"color" : ATTACK_TARGET,
+					"disjointed" :	[{"target" : NEEDS_ANY,
+									"disjointed" : [],
+									"color" : ATTACK_TARGET},
+									{"target" : NEEDS_ANY,
+									"disjointed" : [],
+									"color" : ATTACK_TARGET
+									}]
+					}
 var type = AREA
 
 func execute(unit):
@@ -16,20 +26,21 @@ func execute(unit):
 	var path = []
 	var tiles = []
 	var enemies = []
-	if !action_check(unit, name, SPECIAL): return		# sets targeting to special if the action check passes
-
+	if !action_check(unit, name): return		# sets targeting to special if the action check passes
 	manual_path_shift(unit, origin)	
-	var target = await g.level.send_target
+	var target = await unit.send_target
 	if !target: return
 	path.append(target.astar_index)
 	tiles.append(target)
+	
 	manual_path_shift(unit, target)
-	target = await g.level.send_target
+	target = await unit.send_target
 	if !target: return
 	path.append(target.astar_index)
 	tiles.append(target)
+	
 	manual_path_shift(unit, target)
-	target = await g.level.send_target
+	target = await unit.send_target
 	if !target: return
 	path.append(target.astar_index)
 	tiles.append(target)
