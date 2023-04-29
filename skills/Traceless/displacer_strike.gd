@@ -8,12 +8,12 @@ class_name Displacer_Strike
 @export var cd: int = 0
 @export var tt: String = "Shift 2 squares, then strike an enemy for 3 damage."
 @export var base_damage = 4
-@export var target_info =  {"target" : NEEDS_OPEN,
-							"color" : MOVE_TARGET,
-							"disjointed" :	[{"target" : NEEDS_ENEMY,
-											"disjointed" : [],
-											"color" : ATTACK_TARGET}]
-							}
+var target_info =  {"target" : NEEDS_OPEN,
+					"color" : MOVE_TARGET,
+					"disjointed" :	[{"target" : NEEDS_ENEMY,
+									"disjointed" : [],
+									"color" : ATTACK_TARGET}]
+					}
 var type = BASIC
 
 
@@ -33,9 +33,10 @@ func execute(unit):
 	Global.suppress_collision()
 	path = Global.level.astar.get_id_path(origin.astar_index, shift_target.astar_index)
 
-	await animate(unit, target, origin, path)
+	var effects = {"effects":
+					[damage_effect.bind(unit, t, base_damage)]}
+	await animate(unit, target, origin, path, effects)
 
-	if t: unit.deal_damage(t, base_damage)
 	if unit is Traceless_Shadow:
 		unit.shadow_cleanup()
 		return
@@ -43,10 +44,11 @@ func execute(unit):
 	unit.queue_shadow_strike(BASIC)
 	unit.finish_action("skill")
 
-func animate(unit, target, origin, path):
-	print(path)
+func animate(unit, target, origin, path, effects):
 	basic_shift(unit, origin, 2, path)
 	await Global.get_tree().create_timer(.15).timeout
+	unit.emit_signal("change_state", "actor_attacking", effects)
+	
 	target.add_child(fx.instantiate())
 	await unit.animation_finished
 

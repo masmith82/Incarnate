@@ -1,0 +1,35 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://dojowan4govhm"]
+
+[ext_resource type="Texture2D" uid="uid://7v80t8mppt3n" path="res://GFX/Temp/traceless_sheet_scaled.png" id="1_gjtj2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_viknv"]
+atlas = ExtResource("1_gjtj2")
+region = Rect2(98, 0, 98, 144)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e66xc"]
+atlas = ExtResource("1_gjtj2")
+region = Rect2(196, 0, 98, 144)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_irtn5"]
+atlas = ExtResource("1_gjtj2")
+region = Rect2(0, 0, 98, 144)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_viknv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e66xc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_viknv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_irtn5")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}]

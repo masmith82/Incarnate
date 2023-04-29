@@ -12,12 +12,3 @@ icon = ExtResource("2_8b5ce")
 cd = 2
 tt = "Strike twice for 4 damage. Each strike can target a different foe."
 base_damage = 4
-target_info = {
-"color": 0,
-"disjointed": [{
-"color": 3,
-"disjointed": [],
-"target": 0
-}],
-"target": 0
-}

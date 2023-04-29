@@ -18,6 +18,19 @@ class_name Global_Controller
 @onready var blank_icon = load("res://GFX/Generic Icons/blank_square.png")
 var s	# will hold state machine
 
+
+var dir = {	"UP" : Vector2i(0,-1),
+			"RIGHT" : Vector2i(1,0),
+			"DOWN" : Vector2i(0,1),
+			"LEFT" : Vector2i(-1,0),
+			}
+			
+var dir_to_vec = {	Vector2(0,-1) : "up",
+					Vector2(1,0) : "right",
+					Vector2(0,1) : "down",
+					Vector2(-1,0) : "left",
+				}
+
 #======================#
 # KEY GROUPS AND SIGNALS
 # GROUPS:
@@ -96,7 +109,7 @@ func reset_nav():
 func deselect():
 	reset_nav()
 	get_tree().call_group("units", "hide_ui")
-	if current_actor:
+	if is_instance_valid(current_actor):
 		current_actor.states.set_unit_state("actor_idle")
 	current_actor = null
 
@@ -148,6 +161,7 @@ func add_to_queue(unit, skill, callable):
 	unit.queued_action_finished.connect(queued_cleanup)		# queued_action_finished is emitted from unit
 
 # !!! if we're going to pause the game, we need to lock out ALL other options including other flex buttons
+# !!! related? : when we click again on the button it causes issues... button needs a way to cancel
 
 func resolve_queued_action(callable, unit, skill):
 	deselect()

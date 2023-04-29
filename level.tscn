@@ -655,11 +655,11 @@ position = Vector2(640, 384)
 
 [node name="player_units" type="Node" parent="."]
 
-[node name="bloodthane" parent="player_units" instance=ExtResource("6_x1331")]
-position = Vector2(576, 384)
-
 [node name="traceless" parent="player_units" groups=["bloodthane"] instance=ExtResource("7_4icnd")]
 position = Vector2(512, 384)
+
+[node name="bloodthane" parent="player_units" instance=ExtResource("6_x1331")]
+position = Vector2(576, 384)
 
 [node name="map_camera" type="Camera2D" parent="."]
 position = Vector2(448, 384)

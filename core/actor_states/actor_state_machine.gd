@@ -12,8 +12,10 @@ class_name State_Machine
 func _ready() -> void:
 	for child in get_children():
 		child.state_machine = self
+		child.combat_queue = $combat_queue
 	unit.states = self
-	
+	unit.change_state.connect(set_unit_state)
+
 
 func set_unit_state(state, _args = {}):
 	print(unit.name, "transitioning from ", actor_state.name, " to ", state)

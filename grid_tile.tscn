@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cx5i35k8e5jlr"]
+[gd_scene load_steps=10 format=3 uid="uid://cx5i35k8e5jlr"]
 
 [ext_resource type="Script" path="res://grid_tile.gd" id="1_t6fvx"]
 [ext_resource type="Texture2D" uid="uid://h1g76wkw2hd6" path="res://GFX/UI/grid.png" id="1_ydymj"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b0uei8o1e25s2" path="res://GFX/UI/GridRed.png" id="4_bmvuc"]
 [ext_resource type="Texture2D" uid="uid://bon6fh2liltdy" path="res://GFX/UI/GridGreen.png" id="5_ixk2k"]
 [ext_resource type="Texture2D" uid="uid://c3jpxgvp3lw0b" path="res://GFX/UI/GridLight.png" id="6_b6asj"]
+[ext_resource type="Texture2D" uid="uid://cqxqfg7phcpts" path="res://GFX/UI/Grid_highlight.png" id="7_f6do2"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_c6cqs"]
 animations = [{
@@ -39,7 +40,13 @@ script = ExtResource("1_t6fvx")
 [node name="grid_outline" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_c6cqs")
 
+[node name="grid_highlight" type="Sprite2D" parent="grid_outline"]
+visible = false
+z_index = 1
+texture = ExtResource("7_f6do2")
+
 [node name="grid_body" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_t7kkk")
 
 [node name="coords" type="Label" parent="."]

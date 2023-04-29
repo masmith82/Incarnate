@@ -227,9 +227,14 @@ func melee_attack_anim(unit: Node2D, origin: Area2D, target: Area2D, fx: PackedS
 	var tween = Global.create_tween()
 	tween.tween_property(unit, "position", target.position, .1)
 	target.add_child(fx.instantiate())
-	tween.tween_property(unit, "position", origin.position, .1)
+	tween.tween_property(unit, "position", origin.position, .3)
 	await tween.finished
-	
+
+
+func face_target(unit, target):
+	var direction = unit.position.direction_to(target.position)
+	unit.sprite.animation = "walk_" + str(Global.vec_to_dir(direction))
+
 #===================#
 # REACTION POPUPS + #
 # TRIGGER MANAGER   #
@@ -248,10 +253,19 @@ func confirmation_popup(unit, effect_info, multi: bool = false):
 	unit.get_tree().paused = true
 	return popup
 
-func set_triggers(unit: Actor, target: Actor):
-	unit.add_to_group("has_triggers")
-	unit.add_to_group("has_triggers")
 
-func clear_triggers(unit: Actor, target: Actor):
-	unit.remove_from_group("has_triggers")
-	unit.remove_from_group("has_triggers")
+var damage_effect = Callable(deal_damage)
+var healing_effect = Callable(heal_damage)
+var buff_effect = Callable(apply_buff)
+
+
+func deal_damage(source, target, damage):
+	target.take_damage(source, damage)
+
+
+func heal_damage(source, target, healing):
+	target.heal_damage(source, healing)
+
+
+func apply_buff(source, target, buff):
+	target.add_buff(buff)

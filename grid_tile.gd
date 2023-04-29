@@ -11,7 +11,7 @@ class_name Grid_Tile
 #====================#
 # INSTANCE VARIABLES
 #====================#
-
+@onready var grid_highlight = $grid_outline/grid_highlight
 @onready var grid_text = $grid_text
 @export var move_cost = 1						# move cost multiplier for rough terrain
 
@@ -20,6 +20,7 @@ var neighbors = []								# array of neighbor tiles
 var valid_selection = false						# flagged if a tile is determined to be valid during rangefinding
 var occupied = false							# set if tile is currently occupied by a unit
 var obstacle = false							# set if tile is currently occupied by an obstacle
+
 
 func _ready():
 	await get_tree().create_timer(.1).timeout		# slight delay to generate the map fully
@@ -48,6 +49,7 @@ func clear_tiles():
 	$grid_outline.frame = 0
 	$grid_outline.modulate.a = 1
 	$grid_text.text = ""
+	$grid_outline/grid_highlight.hide()
 
 #######################
 # FUNCTION: get_unit_on_tile
@@ -71,7 +73,6 @@ func get_unit_on_tile() -> Node2D:
 enum {ATTACK_TARGET, MOVE_TARGET, AID_TARGET, SPECIAL_TARGET}
 	
 func set_highlight():
-	print("new target from grid")
 
 	match Global.s.target_color:
 		MOVE_TARGET:

@@ -33,6 +33,8 @@ func execute(unit):
 	
 class chimeric_buff extends Buff:
 
+	var reacts_to = "attack"
+
 	func _init():
 		duration = 1
 		name = "Chimeric CLoak"
@@ -48,7 +50,8 @@ class chimeric_buff extends Buff:
 						"effect": "You take half damage from this strike. If less than 3 damage is prevented, this buff refreshes. Otherwise it is consumed.",
 						"icon": icon, "reaction": true
 						}
-		
+
+
 	func chimeric_cloak():
 		var confirm = skill_lib.confirmation_popup(unit, effect_info)
 		await confirm.resolved

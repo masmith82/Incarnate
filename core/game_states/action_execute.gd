@@ -7,7 +7,12 @@ class_name Action_Execute
 #=============================
 
 func _ready():
+	if Global.current_actor.is_in_group("temporary"):		# failsafe against self-destroying units
+		Global.s.change_selection_state("no_selection")
+		return
+		
 	await Global.current_actor.action_finished
+	
 	state_machine.change_selection_state("player_select")
 
 func enter(_args := {}):

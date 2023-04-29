@@ -1,8 +1,204 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxjlf4dvf5wm6"]
+[gd_scene load_steps=18 format=3 uid="uid://cxjlf4dvf5wm6"]
 
 [ext_resource type="Script" path="res://enemy_actor.gd" id="1_soiw3"]
 [ext_resource type="Texture2D" uid="uid://dlvbgr5ksaq15" path="res://GFX/Enemies/$MonsterA.png" id="2_lsgdi"]
 [ext_resource type="PackedScene" uid="uid://cnuxje16d2cj6" path="res://core/actor_states/actor_state_machine.tscn" id="3_tmtj6"]
+
+[sub_resource type="Animation" id="Animation_xha2k"]
+resource_name = "drag_up"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -64)]
+}
+
+[sub_resource type="Animation" id="Animation_a0ep5"]
+resource_name = "drag_right"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(64, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_bxx1y"]
+resource_name = "drag_down"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 64)]
+}
+
+[sub_resource type="Animation" id="Animation_l5qp2"]
+resource_name = "drag_left"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-64, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_2gss1"]
+resource_name = "walk_up"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_up"]
+}
+
+[sub_resource type="Animation" id="Animation_rj03a"]
+resource_name = "walk_right"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(64, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_right"]
+}
+
+[sub_resource type="Animation" id="Animation_rb5xr"]
+resource_name = "walk_down"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_down"]
+}
+
+[sub_resource type="Animation" id="Animation_w1iyh"]
+resource_name = "walk_left"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-64, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_left"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_krbaf"]
+_data = {
+"drag_down": SubResource("Animation_bxx1y"),
+"drag_left": SubResource("Animation_l5qp2"),
+"drag_right": SubResource("Animation_a0ep5"),
+"drag_up": SubResource("Animation_xha2k"),
+"walk_down": SubResource("Animation_rb5xr"),
+"walk_left": SubResource("Animation_w1iyh"),
+"walk_right": SubResource("Animation_rj03a"),
+"walk_up": SubResource("Animation_2gss1")
+}
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xk8xy"]
 atlas = ExtResource("2_lsgdi")
@@ -40,7 +236,7 @@ animations = [{
 size = Vector2(63, 63)
 
 [node name="enemy_actor" type="Node2D" node_paths=PackedStringArray("buff_list") groups=["NPCs", "enemy_units", "units"]]
-position = Vector2(512, 512)
+position = Vector2(0, 63.0244)
 script = ExtResource("1_soiw3")
 buff_list = NodePath("buff_list")
 max_health = 10
@@ -48,7 +244,13 @@ base_movement = 4
 
 [node name="actor_core" type="Node2D" parent="."]
 
-[node name="sprite_ph" type="AnimatedSprite2D" parent="actor_core"]
+[node name="animation_player" type="AnimationPlayer" parent="actor_core"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_krbaf")
+}
+
+[node name="sprite" type="AnimatedSprite2D" parent="actor_core"]
 modulate = Color(1, 0.278431, 0.301961, 0.87451)
 sprite_frames = SubResource("SpriteFrames_ya6mi")
 autoplay = "default"

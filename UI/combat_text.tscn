@@ -42,6 +42,8 @@ _data = {
 }
 
 [node name="combat_text" type="Label"]
+z_index = 5
+z_as_relative = false
 offset_right = 40.0
 offset_bottom = 23.0
 pivot_offset = Vector2(20, 12)

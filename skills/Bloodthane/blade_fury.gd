@@ -9,10 +9,11 @@ class_name Blade_Fury
 @export var tt: String = "Attack a target in melee range for 4 damage."
 @export var base_damage = 4
 
-@export var target_info =  {"target" : NEEDS_ENEMY,
-							"color" : ATTACK_TARGET,
-							"disjointed" :	[]
-							}
+var flags = ["attack"]
+var target_info =  {"target" : NEEDS_ENEMY,
+					"color" : ATTACK_TARGET,
+					"disjointed" :	[]
+					}
 
 var type = BASIC
 
@@ -24,15 +25,16 @@ func execute(unit):
 	if !target: return
 	var t = target.get_unit_on_tile()
 
-	if t:
-		await unit.deal_damage(t, base_damage)
+	var effects = {"effects":
+					[damage_effect.bind(unit, t, base_damage)]}
 
-	await animate(unit, origin, target)
+	animate(unit, origin, target, effects)
 
 	unit.cooldowns[name] = cd
 	unit.finish_action("skill")
 	
 
-func animate(unit, origin, target):
-	unit.states.set_unit_state("actor_animating")
+func animate(unit, origin, target, effects):
+	unit.face_target(target)	
 	await melee_attack_anim(unit, origin, target, fx)
+	unit.emit_signal("change_state", "actor_attacking", effects)

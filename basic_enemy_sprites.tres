@@ -1,0 +1,35 @@
+[gd_resource type="SpriteFrames" load_steps=5 format=3 uid="uid://dbrod5hyvr2mu"]
+
+[ext_resource type="Texture2D" uid="uid://dlvbgr5ksaq15" path="res://GFX/Enemies/$MonsterA.png" id="1_w881b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gogxc"]
+atlas = ExtResource("1_w881b")
+region = Rect2(48, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_22m15"]
+atlas = ExtResource("1_w881b")
+region = Rect2(0, 0, 48, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wr2f1"]
+atlas = ExtResource("1_w881b")
+region = Rect2(96, 0, 48, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gogxc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_22m15")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gogxc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wr2f1")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}]

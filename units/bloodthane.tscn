@@ -1,9 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://gr6wsoitm41a"]
+[gd_scene load_steps=4 format=3 uid="uid://gr6wsoitm41a"]
 
 [ext_resource type="PackedScene" uid="uid://b2c0hh1ie4ib6" path="res://actor.tscn" id="1_04foe"]
 [ext_resource type="Script" path="res://units/bloodthane.gd" id="2_ieban"]
+[ext_resource type="SpriteFrames" uid="uid://dlx1qji7ey03j" path="res://base_sprite.tres" id="3_gfn4o"]
 
 [node name="bloodthane" groups=["bloodthane"] instance=ExtResource("1_04foe")]
 script = ExtResource("2_ieban")
 max_health = 12
 base_movement = 4
+
+[node name="sprite" parent="actor_core" index="0"]
+sprite_frames = ExtResource("3_gfn4o")
+animation = &"walk_down"

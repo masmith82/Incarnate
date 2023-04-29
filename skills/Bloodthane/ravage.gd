@@ -14,7 +14,7 @@ var target_info =  {"target" : NEEDS_ENEMY,
 							"color" : ATTACK_TARGET,
 							"disjointed" :	[{"target" : NEEDS_ENEMY,
 											"disjointed" : [],
-											"color" : SPECIAL_TARGET},]
+											"color" : NEEDS_ENEMY},]
 							}
 
 var type = HEAVY
@@ -29,7 +29,7 @@ func execute(unit):
 	if !target: return
 	var t = target.get_unit_on_tile()
 	enemies.append(t)
-	await Global.get_tree().create_timer(.1).timeout
+	#await Global.get_tree().create_timer(.1).timeout
 
 	target_basic(origin, 1)
 	target = await unit.send_target

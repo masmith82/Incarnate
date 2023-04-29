@@ -6,6 +6,7 @@ enum {NEEDS_ENEMY, NEEDS_ALLY, NEEDS_OPEN, NEEDS_ANY, NEEDS_UNIT}
 
 var target_info
 var target_count
+var valid_count = 1
 
 func enter(_args := {}):
 	print("Player target args: ", _args)
@@ -27,7 +28,7 @@ func handle_click(tile):
 	var valid = false
 	target_count = target_info["disjointed"].size()
 	
-	match target_info["target"]:
+	match target_info["target"]:		# determines if the skill needs a specific type of unit or empty tile to activate
 		NEEDS_ANY:
 			valid = true
 		NEEDS_OPEN:
@@ -39,18 +40,6 @@ func handle_click(tile):
 		NEEDS_ALLY:
 			if unit and unit.is_in_group("player_units"): valid = true
 		_: return
-	
-#	if target_info["target"] == NEEDS_ANY:
-#		valid = true
-#	elif !unit and target_info["target"] == NEEDS_OPEN:
-#		valid = true
-#	elif unit and target_info["target"] == NEEDS_ANY:
-#		valid = true
-#	elif unit and unit.is_in_group("enemy_units") and target_info["target"] == NEEDS_ENEMY:
-#		valid = true
-#	elif unit and unit.is_in_group("player_units") and target_info["target"] == NEEDS_ALLY:
-#		valid = true
-
 
 	if valid == true:
 		if target_count <= 0:
@@ -61,11 +50,14 @@ func handle_click(tile):
 			state_machine.change_selection_state("action_execute")
 
 		else:
-			Global.current_actor.emit_signal("send_target", tile)
-			tile.grid_text.text = "1"
 			target_info["target"] = target_info["disjointed"].front()["target"]
 			state_machine.target_color = target_info["disjointed"].pop_front()["color"]
+			Global.current_actor.emit_signal("send_target", tile)
+			tile.grid_text.text = str(valid_count)
+			tile.grid_highlight.show()
 			target_count -= 1
+			valid_count += 1
+
 			
 	
 	# working for displacer strike but not ravage?

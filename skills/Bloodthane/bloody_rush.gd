@@ -58,15 +58,22 @@ func execute(unit):
 		for neighbor in tile.neighbors:
 			if !enemies.has(neighbor.get_unit_on_tile()): enemies.append(neighbor.get_unit_on_tile())
 
-	# filter null entries
+	# filter null entries and allies
 	enemies = enemies.filter(func(e): return e != null)
-
+	enemies = enemies.filter(func(e): return e.is_in_group("enemy_units"))
+	
+	var effects = {"effects": []}
 	for e in enemies:
-		if e.is_in_group("enemy_units"): unit.deal_damage(e, base_damage)
-		
+		effects["effects"].append(damage_effect.bind(unit, e, base_damage))
+	
+	unit.emit_signal("change_state", "actor_attacking", effects)
+	
 	unit.finish_action("skill")
 	unit.cooldowns[name] = cd
 	path.clear()
+
+	# !!! this is functional for now but animation is very decoupled from effect
+	# could maybe implement some kind of raycast solution
 
 	# lots of nonsense targeting to fix: disallow repeats, shift logic, resolve shift
 	# alternately could be lazy and have BT jump back to origin tile, make it more of an AoE

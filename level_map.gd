@@ -17,12 +17,7 @@ var astar = AStarGrid2D.new()	# initializing the astar pathfinder
 var astar_to_tile = {}			# a dictionary that contains astar coordinates to tile_ids as key:value pairs
 var map_size = Vector2i(12,12)	# size of the map, x tiles * y tiles
 								# a dictionary of directions as vectors
-								
-var dir = {	"UP" : Vector2i(0,-1),
-			"RIGHT" : Vector2i(1,0),
-			"DOWN" : Vector2i(0,1),
-			"LEFT" : Vector2i(-1,0),
-			}
+
 
 #=========#
 # SIGNALS #
@@ -136,8 +131,8 @@ func build_pathfinding():
 func get_neighbors(tile_id: Area2D):
 	var start_pos = tile_id.astar_index	
 	var dest = Vector2(0,0)
-	for d in dir:
-		dest = start_pos + dir[d]
+	for d in Global.dir:
+		dest = start_pos + Global.dir[d]
 		if astar.is_in_boundsv(dest):
 			tile_id.neighbors.append(astar_to_tile[dest])
 

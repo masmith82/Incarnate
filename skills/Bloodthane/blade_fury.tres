@@ -12,6 +12,7 @@ icon = ExtResource("2_0exd2")
 cd = 0
 tt = "Attack a target in melee range for 4 damage."
 base_damage = 4
+flags = []
 target_info = {
 "color": 0,
 "disjointed": [],

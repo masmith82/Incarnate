@@ -14,7 +14,6 @@ class_name Actor
 
 # skill info
 @export var skill_data = Resource
-
 var skill_loadout = []
 
 # enums for handling skill types and action points
@@ -38,6 +37,9 @@ var action_pool = default_action_pool.duplicate()
 
 # pointers and misc setup
 
+@onready var sprite = $actor_core/sprite
+@onready var animate = $actor_core/animation_player
+
 var sk
 var buffs
 
@@ -59,6 +61,7 @@ signal can_react
 signal resolve_ready
 signal reacted
 signal animation_finished
+signal change_state
 
 signal shifted
 signal moved
@@ -199,6 +202,17 @@ func end_turn():
 	get_unit_pos()
 	Global.end_player_turn()
 
+
+func get_reactions(effect):
+	var reactions = can_react.get_connections()
+	#var effect_flags = effect.get_object().flags	# eventually each skill will have array of stuff
+
+	var effect_flags = ["attack"]	# !!! placeholder, will have to migrate enemy skills
+
+	if reactions.size() > 0:
+		if reactions[0]["callable"].get_object().reacts_to in effect_flags:
+			emit_signal("can_react")
+
 #=================#
 # FUNCTION: get_unit_pos
 # Get's the units current tile and astar_position.
@@ -213,11 +227,6 @@ func get_unit_pos():
 		origin_tile.occupied = true		# this might be a problem with shifting?
 		print(name, " getting unit position...")
 
-func deal_damage(target : Node2D, damage : int):
-	states.set_unit_state("actor_attacking", {"target": target})
-	target.states.set_unit_state("actor_under_attack", {"source": self})
-	await self.resolve_ready
-	target.take_damage(self, damage)
 
 #=================#
 # FUNCTION: scaled_damage_taken_reduction:
@@ -242,6 +251,7 @@ func scaled_damage_taken_reduction(damage):
 #=================#
 
 func take_damage(source : Node2D, damage : int):
+	
 	var damage_modified = scaled_damage_taken_reduction(damage)
 	health = health - damage_modified
 	combat_text(damage_modified)
@@ -265,7 +275,7 @@ func incoming_resolved():
 # Increments health when healed, stores overhealing info
 # !!! NYI fully
 #=================#
-func heal_damage(source : Node2D, healing : int):
+func heal_damage(source : Actor, healing : int):
 	if health + healing > max_health:
 		health = max_health
 		var overheal = healing - (max_health - health)		# overhealing will probably do something at some point
@@ -286,7 +296,6 @@ func heal_damage(source : Node2D, healing : int):
 #=================#
 
 func i_dealt_damage(target: Node2D, damage : int):
-	await self.action_finished
 	emit_signal("dealt_damage", target, damage)
 
 #=================#

@@ -74,29 +74,41 @@ func end_turn():
 	
 			
 func basic_melee():
+	var effects = {"effects":
+					[damage_effect.bind(self, target, 5)]}
 
 	Global.level.target_basic(origin_tile, 1)
 	if target.origin_tile.valid_selection == false:
 		pass
 	if target.origin_tile.valid_selection == true:
-		var facing = face_target(target)
+		var facing = face_target(self, target)
 		var tween = create_tween()
-		self.deal_damage(target, 5)
 		tween.tween_property(self, "position", target.origin_tile.position, .1)
 		tween.tween_property(self, "position", origin_tile.position, .1)
 		if tween: await tween.finished
+
+	emit_signal("change_state", "actor_attacking", effects)
 	Global.reset_nav()
+	await get_tree().create_timer(.1).timeout
+	emit_signal("change_state", "actor_finished")
+
+var damage_effect = Callable(deal_damage2)
+
+func deal_damage2(source, target, damage):
+	target.take_damage(source, damage)
 
 
-func deal_damage(target : Node2D, damage : int):
-	states.set_unit_state("actor_attacking", {"target": target})
-	target.states.set_unit_state("actor_under_attack", {"source": self})
-	await self.resolve_ready
-	target.take_damage(self, damage)
-	states.set_unit_state("actor_finished")
+func get_direction_to_target(unit, target):
+	return unit.position.direction_to(target.position)
 
-func face_target(target):
-	pass
+
+func face_target(unit, target):
+	var direction = get_direction_to_target(unit, target)
+
+
+
+
+
 
 
 func suppress_collision():

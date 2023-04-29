@@ -80,6 +80,9 @@ class bt_passive extends Buff:
 	# !!! need to resolve what happens if a killing blow triggers a pact
 	# currently still calls the popup menu (which probably needs to be reworked anyway)
 	
+	# !!! consider moving to a more passive system: player selects which pact is active, and
+	# it automatically triggers. Snappier, but less flexible
+	
 	func seal_pact(target, pact):
 		if target != null:
 			var blood = target.buffs.find_child("Blood-bound", false, false)

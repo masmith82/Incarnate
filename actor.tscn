@@ -1,55 +1,225 @@
-[gd_scene load_steps=10 format=3 uid="uid://b2c0hh1ie4ib6"]
+[gd_scene load_steps=15 format=3 uid="uid://b2c0hh1ie4ib6"]
 
 [ext_resource type="Script" path="res://actor.gd" id="1_u4scy"]
-[ext_resource type="Texture2D" uid="uid://ktox0tq85wt7" path="res://GFX/Units/Bloodthane/bt_spritesheet_scaled.png" id="2_fg2nb"]
+[ext_resource type="SpriteFrames" uid="uid://dbrod5hyvr2mu" path="res://basic_enemy_sprites.tres" id="2_y4q64"]
 [ext_resource type="PackedScene" uid="uid://cv6on2v6cyfet" path="res://UI/combat_text.tscn" id="3_0kkj6"]
 [ext_resource type="PackedScene" uid="uid://cnuxje16d2cj6" path="res://core/actor_states/actor_state_machine.tscn" id="3_n1gdf"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rmpcr"]
-atlas = ExtResource("2_fg2nb")
-region = Rect2(525, 0, 350, 350)
+[sub_resource type="Animation" id="Animation_xha2k"]
+resource_name = "drag_up"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -64)]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_qlo3a"]
-atlas = ExtResource("2_fg2nb")
-region = Rect2(175, 0, 350, 350)
+[sub_resource type="Animation" id="Animation_a0ep5"]
+resource_name = "drag_right"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(64, 0)]
+}
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_u7eho"]
-atlas = ExtResource("2_fg2nb")
-region = Rect2(875, 0, 350, 350)
+[sub_resource type="Animation" id="Animation_bxx1y"]
+resource_name = "drag_down"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 64)]
+}
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_5uc26"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rmpcr")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qlo3a")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rmpcr")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_u7eho")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
+[sub_resource type="Animation" id="Animation_l5qp2"]
+resource_name = "drag_left"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(2, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-64, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_2gss1"]
+resource_name = "walk_up"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_up"]
+}
+
+[sub_resource type="Animation" id="Animation_rj03a"]
+resource_name = "walk_right"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(64, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_right"]
+}
+
+[sub_resource type="Animation" id="Animation_rb5xr"]
+resource_name = "walk_down"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 64)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_down"]
+}
+
+[sub_resource type="Animation" id="Animation_w1iyh"]
+resource_name = "walk_left"
+length = 0.25
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-64, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("actor_core/sprite:animation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"walk_left"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_krbaf"]
+_data = {
+"drag_down": SubResource("Animation_bxx1y"),
+"drag_left": SubResource("Animation_l5qp2"),
+"drag_right": SubResource("Animation_a0ep5"),
+"drag_up": SubResource("Animation_xha2k"),
+"walk_down": SubResource("Animation_rb5xr"),
+"walk_left": SubResource("Animation_w1iyh"),
+"walk_right": SubResource("Animation_rj03a"),
+"walk_up": SubResource("Animation_2gss1")
+}
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kr0ct"]
 size = Vector2(63, 63)
 
 [node name="actor" type="Node2D" groups=["player_units", "units"]]
-position = Vector2(0, -3)
+position = Vector2(0, 64)
 script = ExtResource("1_u4scy")
 
 [node name="actor_core" type="Node2D" parent="."]
 
-[node name="sprite_ph" type="AnimatedSprite2D" parent="actor_core"]
+[node name="animation_player" type="AnimationPlayer" parent="actor_core"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_krbaf")
+}
+
+[node name="sprite" type="AnimatedSprite2D" parent="actor_core"]
 scale = Vector2(0.2, 0.199)
-sprite_frames = SubResource("SpriteFrames_5uc26")
-autoplay = "default"
+sprite_frames = ExtResource("2_y4q64")
+animation = &"walk_down"
 
 [node name="actor_area" type="Area2D" parent="actor_core"]
 z_index = 1

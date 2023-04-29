@@ -31,3 +31,5 @@
 - Implement more composition!
 - CTRL-D to replace variable names
 - hey "is_instance_valid" is useful...
+
+!!! - target state could have a target_disjoint substate

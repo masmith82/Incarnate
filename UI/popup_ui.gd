@@ -29,7 +29,7 @@ func _ready():
 func setup_skill_popup(effect_type):
 	for s in skills:
 		if s == null: continue
-		var name = s["name"]
+		name = s["name"]
 		if cd[name] > 0:		# s gives us the full skill, s["name"] gives us skill's name, cd[~] should give us cd of skill
 			var new_button = base_button.duplicate(0)
 			new_button.texture_normal = s["icon"]
